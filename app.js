@@ -50,7 +50,7 @@ function setupCommandCentre(){
   stack.id="pinnedAlerts";stack.className="pinned-alerts";
   stack.setAttribute("aria-live","assertive");stack.setAttribute("aria-label","Pinned system alerts");
   stack.innerHTML='<div class="pinned-alerts-head"><b>LIVE ALERTS</b><div class="alert-head-actions"><button type="button" id="alertSoundToggle" aria-pressed="false">🔇 SOUND OFF</button><button type="button" id="clearPinnedAlerts">CLEAR ALL</button></div></div><div id="pinnedAlertList"></div>';
-  appRoot.append(stack);
+  ($('digitalTwin')||appRoot).append(stack);
   $("clearPinnedAlerts").addEventListener("click",()=>{$("pinnedAlertList").replaceChildren();});
   $("alertSoundToggle").addEventListener("click",async()=>{
    try{
