@@ -23,3 +23,11 @@ Install Arduino IDE, ESP32 board package and Adafruit DHT library. Set Wi-Fi cre
 
 ## Next steps
 Build and calibrate the sensor unit; add a database such as Supabase; connect the dashboard to real readings; add secure authenticated control; test fail-safe behavior and capture genuine prototype evidence.
+
+## NISR evidence and project methodology
+- **Official national context:** NISR Agricultural Household Survey (AHS) 2024. NISR reports an estimated 2.2 million agricultural households (65.3% of all households); the survey covered 600 villages in 30 districts. These are national survey findings, not readings from this greenhouse.
+- **Source:** [NISR AHS 2024 findings](https://alpha.statistics.gov.rw/data-sources/surveys/Agricultural-Household-Survey/agricultural-household-survey-2024) and [NISR microdata catalogue](https://www.microdatabk.statistics.gov.rw/catalog/123).
+- **Sensor test workflow:** the field workspace accepts CSV files with timestamp, temperature, humidity, soil_moisture and light_lux columns. Imported records are validated for required columns and numeric values and can be exported as CSV.
+- **Scenario tests:** normal conditions, heat stress, dry soil and low sunlight are deterministic demo scenarios. The existing control rules are example thresholds and require crop-specific agronomic validation before real deployment.
+- **Current limitations:** the web app still uses simulated sensor data by default. CSV import is local to the browser session; it is not a permanent database. No physical ESP32 telemetry or relay control is active. Do not report water savings, yield increases or field performance as measured results.
+- **AI disclosure:** AI assistance was used during development. The team must review, understand, test and disclose AI-assisted work in accordance with the NISR competition rules.
