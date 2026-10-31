@@ -1,12 +1,55 @@
 const $=id=>document.getElementById(id);
+// Full-screen command centre and persistent action alerts.
+function setupCommandCentre(){
+ const appRoot=$("app");
+ if(!appRoot||$("pinnedAlerts"))return;
+ const actions=document.querySelector(".top-actions");
+ if(actions){
+  const full=document.createElement("button");
+  full.id="fullScreenToggle";full.className="fullscreen-toggle";full.type="button";
+  full.innerHTML='<span>⛶</span> FULL SCREEN';
+  full.addEventListener("click",async()=>{
+   try{if(document.fullscreenElement){await document.exitFullscreen();}else{await appRoot.requestFullscreen({navigationUI:"hide"});}}
+   catch(err){pinAlert("Fullscreen unavailable",err.message,"warning");}
+  });
+  actions.prepend(full);
+ }
+ const stack=document.createElement("section");
+ stack.id="pinnedAlerts";stack.className="pinned-alerts";
+ stack.setAttribute("aria-live","polite");stack.setAttribute("aria-label","Pinned system alerts");
+ stack.innerHTML='<div class="pinned-alerts-head"><b>LIVE EVENT LOG</b><button type="button" id="clearPinnedAlerts">CLEAR ALL</button></div><div id="pinnedAlertList"></div>';
+ appRoot.append(stack);
+ $("clearPinnedAlerts").addEventListener("click",()=>{$("pinnedAlertList").replaceChildren();});
+ document.addEventListener("fullscreenchange",()=>{
+  const active=!!document.fullscreenElement;
+  full.innerHTML=active?'<span>⛶</span> EXIT FULL SCREEN':'<span>⛶</span> FULL SCREEN';
+  appRoot.classList.toggle("is-fullscreen",active);
+ });
+}
+function pinAlert(title,detail,severity="info"){
+ setupCommandCentre();
+ const list=$("pinnedAlertList");if(!list)return;
+ const item=document.createElement("article");
+ item.className="pinned-alert "+(severity==="critical"?"is-critical":severity==="warning"?"is-warning":"is-info");
+ const head=document.createElement("div");head.className="pinned-alert-title";
+ const dot=document.createElement("i");const label=document.createElement("b");label.textContent=title;
+ const close=document.createElement("button");close.type="button";close.textContent="×";close.setAttribute("aria-label","Dismiss alert");close.addEventListener("click",()=>item.remove());
+ head.append(dot,label,close);
+ const message=document.createElement("p");message.textContent=detail;
+ const meta=document.createElement("small");meta.textContent=new Date().toLocaleTimeString()+" · "+severity.toUpperCase();
+ item.append(head,message,meta);list.prepend(item);
+ while(list.children.length>6)list.lastElementChild.remove();
+}
+window.zipcodersPinnedAlert=(title,detail,critical=false)=>pinAlert(title,detail,critical?"critical":"warning");
+
 const DEMO_USER="admin",DEMO_PASS="green2026";
 let simulation=true,masterOn=true,historyTemp=[],historyHumidity=[],tickCount=0;
 const data={temp:27,humidity:67,soil:54,lux:8200};
 const device={pump:false,fan:false,growlight:false};
-function showApp(){$("loginScreen").classList.add("hidden");$("app").classList.remove("hidden");updateAll();startSimulation();}
+function showApp(){setupCommandCentre();pinAlert("Simulation workspace opened","Greenhouse command centre is ready. All process values are simulated.");$("loginScreen").classList.add("hidden");$("app").classList.remove("hidden");updateAll();startSimulation();}
 $("loginForm").addEventListener("submit",e=>{e.preventDefault();if($("username").value.trim()===DEMO_USER&&$("password").value===DEMO_PASS){$("loginError").textContent="";showApp();}else $("loginError").textContent="Incorrect demo username or password.";});
 $("logout").addEventListener("click",()=>{$("app").classList.add("hidden");$("loginScreen").classList.remove("hidden");$("password").value="";});
-function logActivity(title,detail){const feed=$("activityFeed"),item=document.createElement("div");item.className="activity-item";const dot=document.createElement("i"),wrap=document.createElement("div"),b=document.createElement("b"),s=document.createElement("small");b.textContent=title;s.textContent=detail;wrap.append(b,s);item.append(dot,wrap);feed.prepend(item);while(feed.children.length>5)feed.lastChild.remove();}
+function logActivity(title,detail){pinAlert(title,detail,/high|low|critical|failed|error/i.test(title+" "+detail)?"warning":"info");const feed=$("activityFeed"),item=document.createElement("div");item.className="activity-item";const dot=document.createElement("i"),wrap=document.createElement("div"),b=document.createElement("b"),s=document.createElement("small");b.textContent=title;s.textContent=detail;wrap.append(b,s);item.append(dot,wrap);feed.prepend(item);while(feed.children.length>5)feed.lastChild.remove();}
 function setDevice(id,on,reason="manual demo control"){const changed=device[id]!==on;device[id]=on;$(id).checked=on;const labels={pump:"pumpState",fan:"fanState",growlight:"lampState"};const names={pump:"Irrigation pump",fan:"Ventilation fan",growlight:"Grow lamp"};$(labels[id]).textContent=(on?"ON":"OFF")+" · "+reason;const visual={pump:"waterVisual",fan:"fanVisual",growlight:"lampVisual"}[id];$(visual).classList.toggle("on",on);if(changed)logActivity(names[id]+" "+(on?"turned ON":"turned OFF"),reason);}
 function applyAutomation(){if(!masterOn){["pump","fan","growlight"].forEach(id=>setDevice(id,false,"master system OFF"));return;}if(!$("auto").checked)return;setDevice("fan",data.temp>=30,data.temp>=30?"temperature ≥ 30°C":"temperature below 30°C");setDevice("pump",data.soil<35,data.soil<35?"soil moisture below 35%":"soil moisture adequate");setDevice("growlight",data.lux<4500,data.lux<4500?"low light detected":"natural light sufficient");}
 function updateMetrics(){const t=data.temp,h=data.humidity,s=data.soil,l=data.lux;$("tempValue").textContent=t.toFixed(1);$("humidityValue").textContent=Math.round(h);$("soilValue").textContent=Math.round(s);$("luxValue").textContent=Math.round(l).toLocaleString();$("tempOut").textContent=t.toFixed(1)+"°C";$("humidityOut").textContent=Math.round(h)+"%";$("soilOut").textContent=Math.round(s)+"%";$("luxOut").textContent=Math.round(l).toLocaleString()+" lux";$("tempTest").value=t;$("humidityTest").value=h;$("soilTest").value=s;$("luxTest").value=l;
