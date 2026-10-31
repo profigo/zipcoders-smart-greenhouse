@@ -1,29 +1,77 @@
 const $=id=>document.getElementById(id);
 // Full-screen command centre and persistent action alerts.
+let alertAudioContext=null,alertSoundEnabled=false;
+function playAlertTone(severity="warning"){
+ if(!alertSoundEnabled||!alertAudioContext)return;
+ try{
+  const now=alertAudioContext.currentTime;
+  const count=severity==="critical"?3:2;
+  for(let i=0;i<count;i++){
+   const osc=alertAudioContext.createOscillator(),gain=alertAudioContext.createGain();
+   osc.type="sine";osc.frequency.value=severity==="critical"?880:660;
+   gain.gain.setValueAtTime(.0001,now+i*.22);
+   gain.gain.exponentialRampToValueAtTime(.16,now+i*.22+.025);
+   gain.gain.exponentialRampToValueAtTime(.0001,now+i*.22+.16);
+   osc.connect(gain);gain.connect(alertAudioContext.destination);
+   osc.start(now+i*.22);osc.stop(now+i*.22+.18);
+  }
+ }catch(e){console.warn("Alert sound unavailable",e);}
+}
 function setupCommandCentre(){
  const appRoot=$("app");
- if(!appRoot||$("pinnedAlerts"))return;
+ if(!appRoot)return;
  const actions=document.querySelector(".top-actions");
- if(actions){
+ if(actions&&!$("fullScreenToggle")){
   const full=document.createElement("button");
   full.id="fullScreenToggle";full.className="fullscreen-toggle";full.type="button";
-  full.innerHTML='<span>⛶</span> FULL SCREEN';
+  full.innerHTML='<span>⛶</span> WORKSPACE FULL SCREEN';
   full.addEventListener("click",async()=>{
    try{if(document.fullscreenElement){await document.exitFullscreen();}else{await appRoot.requestFullscreen({navigationUI:"hide"});}}
    catch(err){pinAlert("Fullscreen unavailable",err.message,"warning");}
   });
   actions.prepend(full);
  }
- const stack=document.createElement("section");
- stack.id="pinnedAlerts";stack.className="pinned-alerts";
- stack.setAttribute("aria-live","polite");stack.setAttribute("aria-label","Pinned system alerts");
- stack.innerHTML='<div class="pinned-alerts-head"><b>LIVE EVENT LOG</b><button type="button" id="clearPinnedAlerts">CLEAR ALL</button></div><div id="pinnedAlertList"></div>';
- appRoot.append(stack);
- $("clearPinnedAlerts").addEventListener("click",()=>{$("pinnedAlertList").replaceChildren();});
+ const toolbar=document.querySelector("#digitalTwin .toolbar-right");
+ if(toolbar&&!$("sceneFullScreenToggle")){
+  const sceneFull=document.createElement("button");
+  sceneFull.id="sceneFullScreenToggle";sceneFull.className="twin-tool";sceneFull.type="button";
+  sceneFull.textContent="⛶ FULLSCREEN GREENHOUSE";
+  sceneFull.addEventListener("click",async()=>{
+   const scene=$("digitalTwin");
+   try{
+    if(document.fullscreenElement===scene){await document.exitFullscreen();}
+    else{if(document.fullscreenElement)await document.exitFullscreen();await scene.requestFullscreen({navigationUI:"hide"});}
+   }catch(err){pinAlert("Greenhouse fullscreen unavailable",err.message,"warning");}
+  });
+  toolbar.append(sceneFull);
+ }
+ if(!$("pinnedAlerts")){
+  const stack=document.createElement("section");
+  stack.id="pinnedAlerts";stack.className="pinned-alerts";
+  stack.setAttribute("aria-live","assertive");stack.setAttribute("aria-label","Pinned system alerts");
+  stack.innerHTML='<div class="pinned-alerts-head"><b>LIVE ALERTS</b><div class="alert-head-actions"><button type="button" id="alertSoundToggle" aria-pressed="false">🔇 SOUND OFF</button><button type="button" id="clearPinnedAlerts">CLEAR ALL</button></div></div><div id="pinnedAlertList"></div>';
+  appRoot.append(stack);
+  $("clearPinnedAlerts").addEventListener("click",()=>{$("pinnedAlertList").replaceChildren();});
+  $("alertSoundToggle").addEventListener("click",async()=>{
+   try{
+    const AudioCtx=window.AudioContext||window.webkitAudioContext;
+    if(!AudioCtx){pinAlert("Audio not supported","This browser does not support alert audio.","warning");return;}
+    if(!alertAudioContext)alertAudioContext=new AudioCtx();
+    if(alertAudioContext.state==="suspended")await alertAudioContext.resume();
+    alertSoundEnabled=!alertSoundEnabled;
+    $("alertSoundToggle").textContent=alertSoundEnabled?"🔊 SOUND ON":"🔇 SOUND OFF";
+    $("alertSoundToggle").setAttribute("aria-pressed",String(alertSoundEnabled));
+    if(alertSoundEnabled)playAlertTone("info");
+   }catch(err){pinAlert("Audio permission needed",err.message,"warning");}
+  });
+ }
  document.addEventListener("fullscreenchange",()=>{
   const active=!!document.fullscreenElement;
-  full.innerHTML=active?'<span>⛶</span> EXIT FULL SCREEN':'<span>⛶</span> FULL SCREEN';
-  appRoot.classList.toggle("is-fullscreen",active);
+  const sceneActive=document.fullscreenElement===$("digitalTwin");
+  const full=$("fullScreenToggle"),sceneFull=$("sceneFullScreenToggle");
+  if(full)full.innerHTML=active&&!sceneActive?'<span>⛶</span> EXIT WORKSPACE FULL SCREEN':'<span>⛶</span> WORKSPACE FULL SCREEN';
+  if(sceneFull)sceneFull.textContent=sceneActive?"⛶ EXIT GREENHOUSE FULLSCREEN":"⛶ FULLSCREEN GREENHOUSE";
+  appRoot.classList.toggle("is-fullscreen",active&&!sceneActive);
  });
 }
 function pinAlert(title,detail,severity="info"){
@@ -32,13 +80,15 @@ function pinAlert(title,detail,severity="info"){
  const item=document.createElement("article");
  item.className="pinned-alert "+(severity==="critical"?"is-critical":severity==="warning"?"is-warning":"is-info");
  const head=document.createElement("div");head.className="pinned-alert-title";
- const dot=document.createElement("i");const label=document.createElement("b");label.textContent=title;
- const close=document.createElement("button");close.type="button";close.textContent="×";close.setAttribute("aria-label","Dismiss alert");close.addEventListener("click",()=>item.remove());
+ const dot=document.createElement("i"),label=document.createElement("b");label.textContent=title;
+ const close=document.createElement("button");close.type="button";close.textContent="×";close.setAttribute("aria-label","Close alert");
+ close.addEventListener("click",e=>{e.preventDefault();e.stopPropagation();item.remove();});
  head.append(dot,label,close);
  const message=document.createElement("p");message.textContent=detail;
  const meta=document.createElement("small");meta.textContent=new Date().toLocaleTimeString()+" · "+severity.toUpperCase();
  item.append(head,message,meta);list.prepend(item);
  while(list.children.length>6)list.lastElementChild.remove();
+ if(severity==="warning"||severity==="critical")playAlertTone(severity);
 }
 window.zipcodersPinnedAlert=(title,detail,critical=false)=>pinAlert(title,detail,critical?"critical":"warning");
 
@@ -57,7 +107,20 @@ const status=(id,ok,good,bad)=>{const el=$(id);el.textContent=(ok?"● ":"● ")
 function updateHealth(){let score=100-(data.temp>=30?20:0)-(data.soil<35?20:0)-(data.humidity>85||data.humidity<40?10:0)-(data.lux<3000?8:0);$("healthScore").textContent=score;$("healthLabel").textContent=score>=85?"Good conditions":score>=65?"Needs attention":"Critical conditions";$("systemSummary").textContent=masterOn?"Virtual system powered ON":"Master system OFF";}
 function updateChart(){historyTemp.push(data.temp);historyHumidity.push(data.humidity);if(historyTemp.length>12){historyTemp.shift();historyHumidity.shift();}const make=(arr,min,max)=>arr.map((v,i)=>{const x=45+i*(635/Math.max(1,arr.length-1)),y=190-(v-min)/(max-min)*155;return(i?"L":"M")+x.toFixed(1)+" "+y.toFixed(1)}).join(" ");$("tempPath").setAttribute("d",make(historyTemp,15,42));$("humidityPath").setAttribute("d",make(historyHumidity,20,100));}
 function updateAdvice(){let title="Conditions are within the example comfort range.",body="Keep observing the greenhouse. Automatic mode can respond to changing temperature, soil moisture and light.";if(data.temp>=30){title="Temperature is high — ventilation recommended.";body="The simulated temperature is "+data.temp.toFixed(1)+"°C. The automatic controller starts the fan at 30°C to model heat management.";}else if(data.soil<35){title="Soil moisture is low — irrigation recommended.";body="Soil moisture is "+Math.round(data.soil)+"%. The demo pump starts below 35% to represent demand-based watering.";}else if(data.lux<4500){title="Light level is low — grow lamp recommended.";body="The sample light reading is "+Math.round(data.lux)+" lux. The automatic controller switches on the grow lamp below 4,500 lux.";}else if(data.humidity>85){title="Humidity is elevated — inspect airflow.";body="High humidity can increase disease pressure in some crops. Check ventilation and avoid overwatering.";}$("adviceTitle").textContent=title;$("adviceText").textContent=body;$("adviceTime").textContent="Updated from current demo values";}
-function updateAll(){updateMetrics();updateHealth();applyAutomation();updateChart();updateAdvice();}
+const alarmState={};
+function checkThresholdAlerts(){
+ const checks=[
+  ["temperature",data.temp>=30,"High greenhouse temperature",()=>data.temp.toFixed(1)+"°C detected. Ventilation is recommended."],
+  ["soil",data.soil<35,"Low root-zone moisture",()=>Math.round(data.soil)+"% soil moisture. Irrigation is recommended."],
+  ["humidity",data.humidity>85||data.humidity<40,"Humidity outside target range",()=>Math.round(data.humidity)+"% relative humidity. Check airflow and crop conditions."],
+  ["light",data.lux<4500,"Low greenhouse light",()=>Math.round(data.lux)+" lux detected. Supplemental lighting may be needed."]
+ ];
+ checks.forEach(([key,active,title,detail])=>{
+  if(active&&!alarmState[key]){alarmState[key]=true;pinAlert(title,detail(),"warning");}
+  else if(!active&&alarmState[key]){alarmState[key]=false;pinAlert(title+" · condition cleared","The simulated "+key+" reading has returned to its configured range.","info");}
+ });
+}
+function updateAll(){updateMetrics();updateHealth();applyAutomation();updateChart();updateAdvice();checkThresholdAlerts();}
 function randomTick(){if(!simulation||!masterOn&&false)return;data.temp=Math.max(18,Math.min(39,data.temp+(Math.random()-.48)*1.2));data.humidity=Math.max(35,Math.min(95,data.humidity+(Math.random()-.5)*4));data.soil=Math.max(15,Math.min(85,data.soil-(device.pump?-.8:.18)+ (Math.random()-.5)*.7));data.lux=Math.max(1000,Math.min(15000,data.lux+(Math.random()-.5)*600));tickCount++;updateAll();$("snapshot").textContent="● SIMULATION ACTIVE · SAMPLE "+tickCount;}
 let timer=null;function startSimulation(){if(timer)clearInterval(timer);timer=setInterval(randomTick,3500);}
 ["temp","humidity","soil","lux"].forEach(key=>{const id={temp:"tempTest",humidity:"humidityTest",soil:"soilTest",lux:"luxTest"}[key];$(id).addEventListener("input",()=>{data[key]=Number($(id).value);updateAll();logActivity("Sensor test adjusted",key+" set to "+$(id).value);});});
