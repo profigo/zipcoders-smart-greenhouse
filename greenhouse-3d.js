@@ -64,5 +64,38 @@ function val(id){return Number($(id)?.textContent?.replace(/,/g,'')||0);}
 function updateTwin(){let t=val('tempValue'),h=val('humidityValue'),s=val('soilValue'),l=val('luxValue');for(let [id,on] of [['pump',$('pump')?.checked],['fan',$('fan')?.checked],['growlight',$('growlight')?.checked]])status[id]=!!on;$('twinTemp').innerHTML=t.toFixed(1)+' <i>°C</i>';$('twinHumidity').innerHTML=Math.round(h)+' <i>%RH</i>';$('twinSoil').innerHTML=Math.round(s)+' <i>%</i>';$('twinLux').innerHTML=Math.round(l).toLocaleString()+' <i>lux</i>';let n=Number(status.pump)+Number(status.fan)+Number(status.growlight);$('twinOutputs').innerHTML=String(n).padStart(2,'0')+' <i>/ 03</i>';$('twinMode').textContent=$('auto')?.checked?'AUTO':'MANUAL';if(deviceMeshes.pump)for(let id of ['pump','fan','growlight']){let led=deviceMeshes[id]?.userData.lamp;if(led)led.material=status[id]?greenGlow:amberGlow;}if(status.selected)select(status.selected);}
 function select(id){status.selected=id;let data={overview:{name:'Greenhouse process overview',desc:'Three production beds, centralized irrigation, ventilation and supplemental lighting. Orbit the model to inspect the facility.',tag:'FACILITY OVERVIEW',value:'RUNNING',unit:'MODEL STATE',code:'GH-01',source:'SIMULATION ENGINE'},temperature:{name:'Air temperature transmitter',desc:'PT-101 · Mounted above the crop canopy. High temperature activates exhaust ventilation at 30 °C.',tag:'SENSOR · TEMPERATURE',value:val('tempValue').toFixed(1),unit:'DEG C',code:'TT-101',source:'SIMULATED PROCESS'},humidity:{name:'Relative humidity transmitter',desc:'HT-102 · Monitors relative humidity around the crop canopy. Used to identify humidity conditions.',tag:'SENSOR · HUMIDITY',value:Math.round(val('humidityValue')),unit:'% RH',code:'HT-102',source:'SIMULATED PROCESS'},soil:{name:'Capacitive soil moisture probe',desc:'SM-103 · Measures root-zone moisture in production bed 02. Irrigation demand occurs below 35%.',tag:'SENSOR · ROOT ZONE',value:Math.round(val('soilValue')),unit:'% VOLUMETRIC (DEMO)',code:'SM-103',source:'SIMULATED PROCESS'},light:{name:'Canopy light sensor',desc:'LT-104 · Measures light intensity at crop height. Supplemental LEDs switch on below 4,500 lux.',tag:'SENSOR · LIGHT',value:Math.round(val('luxValue')).toLocaleString(),unit:'LUX',code:'LT-104',source:'SIMULATED PROCESS'},pump:{name:'Irrigation transfer pump',desc:'P-101 · Transfers water to the drip irrigation header. Click the pump to toggle its virtual output.',tag:'ACTUATOR · WATER',value:status.pump?'RUNNING':'STOPPED',unit:'VIRTUAL OUTPUT',code:'P-101',source:$('auto')?.checked?'AUTO CONTROL':'OPERATOR COMMAND'},fan:{name:'Exhaust ventilation fan',desc:'EF-201 · Extracts warm air from the greenhouse. Click the fan to toggle its virtual output.',tag:'ACTUATOR · CLIMATE',value:status.fan?'RUNNING':'STOPPED',unit:'VIRTUAL OUTPUT',code:'EF-201',source:$('auto')?.checked?'AUTO CONTROL':'OPERATOR COMMAND'},growlight:{name:'LED grow-light bank',desc:'GL-301 · Supplemental horticultural lighting. Click the light bank to toggle its virtual output.',tag:'ACTUATOR · LIGHTING',value:status.growlight?'ENERGIZED':'OFF',unit:'VIRTUAL OUTPUT',code:'GL-301',source:$('auto')?.checked?'AUTO CONTROL':'OPERATOR COMMAND'}}[id];$('instrumentTag').textContent=data.tag;$('instrumentName').textContent=data.name;$('instrumentDescription').textContent=data.desc;$('instrumentValue').textContent=data.value;$('instrumentUnit').textContent=data.unit;$('instrumentId').textContent=data.code;$('instrumentSource').textContent=data.source;$('instrumentStatus').textContent='● '+(id==='overview'?'MODEL ONLINE':(['temperature','humidity','soil','light'].includes(id)?'SIGNAL SIMULATED':'OUTPUT '+(data.value==='RUNNING'||data.value==='ENERGIZED'?'ACTIVE':'INACTIVE')));$('instrumentStatus').className='instrument-ok';}
 function animate(){requestAnimationFrame(animate);let dt=clock.getDelta();if(!status.paused)elapsed+=dt;if(fanBlades[0])fanBlades[0].rotation.z+=status.fan?dt*11:dt*.12;plantLeaves.forEach(p=>{p.leaf.rotation.z=Math.sin(elapsed*1.1+p.phase)*.06+(p.phase%2?.25:-.25);});waterDrops.forEach((d,i)=>{d.visible=status.pump;if(status.pump){let p=(elapsed*1.8+i/24)%1;d.position.x=-8.1+p*16;d.position.y=1.1+Math.sin(p*18+i)*.025;}});dripDrops.forEach(d=>{d.mesh.visible=status.pump;if(status.pump){let p=(elapsed*1.2+d.phase)%1;d.mesh.position.y=1.0-p*.68;}});growLights.forEach(g=>{g.light.intensity=status.growlight?2.6:0;g.bar.material.emissiveIntensity=status.growlight?1.8:.2;});if(frame++%12===0){let sec=Math.floor(elapsed),hh=String(Math.floor(sec/3600)).padStart(2,'0'),mm=String(Math.floor(sec%3600/60)).padStart(2,'0'),ss=String(sec%60).padStart(2,'0');$('modelClock').textContent=hh+':'+mm+':'+ss;}controls.update();renderer.render(scene,camera);}
-function boot(){try{init();const ids=['tempValue','humidityValue','soilValue','luxValue','pump','fan','growlight','auto'];ids.forEach(id=>{let e=$(id);if(e){new MutationObserver(updateTwin).observe(e,{childList:true,characterData:true,attributes:true,subtree:true});e.addEventListener('change',updateTwin);}});setInterval(updateTwin,900);$('threeFallback')?.remove();}catch(e){host.innerHTML='<div class="three-loading"><b>3D ENGINE UNAVAILABLE</b><small>Check the internet connection to load the Three.js graphics engine. The rest of the dashboard remains available.</small></div>';console.error(e);}}
+let initialized=false;
+let appVisibilityObserver=null;
+let hostResizeObserver=null;
+function startWhenVisible(){
+ if(initialized)return;
+ const width=host.clientWidth,height=host.clientHeight;
+ if(width<2||height<2)return;
+ initialized=true;
+ try{
+  init();
+  const ids=['tempValue','humidityValue','soilValue','luxValue','pump','fan','growlight','auto'];
+  ids.forEach(id=>{let e=$(id);if(e){new MutationObserver(updateTwin).observe(e,{childList:true,characterData:true,attributes:true,subtree:true});e.addEventListener('change',updateTwin);}});
+  setInterval(updateTwin,900);
+  $('threeFallback')?.remove();
+  appVisibilityObserver?.disconnect();
+ }catch(e){
+  initialized=false;
+  host.innerHTML='<div class="three-loading"><b>3D ENGINE UNAVAILABLE</b><small>The 3D facility could not start. Check the browser console and internet connection; the monitoring dashboard is still available.</small></div>';
+  console.error('Greenhouse 3D initialization failed:',e);
+ }
+}
+function boot(){
+ const app=$('app');
+ appVisibilityObserver=new MutationObserver(startWhenVisible);
+ if(app)appVisibilityObserver.observe(app,{attributes:true,attributeFilter:['class','style']});
+ if(typeof ResizeObserver!=='undefined'){
+  hostResizeObserver=new ResizeObserver(()=>{
+   if(!initialized)startWhenVisible();
+   else resize();
+  });
+  hostResizeObserver.observe(host);
+ }
+ startWhenVisible();
+}
 boot();
