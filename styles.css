@@ -65,3 +65,21 @@ h1,h2,h3{letter-spacing:.015em}
 .pinned-alert p{margin:6px 0;color:#5c6f63;font:500 11px/1.45 Inter,sans-serif}
 .pinned-alert small{color:#89988f;font:700 8px Inter,sans-serif;letter-spacing:.06em}
 @media(max-width:700px){.fullscreen-toggle{padding:7px 8px;font-size:8px}.pinned-alerts{top:82px;right:8px;width:min(330px,calc(100vw - 16px));max-height:45vh}.top-actions{gap:6px}.welcome h2{font-size:30px}}
+
+/* MTN-inspired clean typography: light, readable, restrained weights */
+:root{--font-ui:"Open Sans",Arial,sans-serif}
+html,body,button,input,select,textarea{font-family:var(--font-ui)}
+body{font-size:14px;font-weight:400;letter-spacing:0}
+h1,h2,h3,h4,b,strong,.metric-value,.industrial-heading,.toolbar-chip,.instrument-value strong{font-family:var(--font-ui);font-weight:600;letter-spacing:0}
+h1,h2,h3{letter-spacing:0}
+.topbar h1{font-size:20px;font-weight:600}
+.welcome h2{font-size:30px;font-weight:600;letter-spacing:-.4px}
+.section-title h2,.panel-heading h3{font-size:16px;font-weight:600}
+.metric-head,.metric-foot,.control-copy small,.panel-heading p{font-weight:400}
+.metric-value{font-size:30px;font-weight:600;letter-spacing:-.5px}
+.fullscreen-toggle{font:600 10px var(--font-ui);letter-spacing:0}
+.pinned-alerts-head{font:600 10px var(--font-ui);letter-spacing:.04em}
+.pinned-alerts-head button{font:600 9px var(--font-ui)}
+.pinned-alert-title b{font:600 12px var(--font-ui)}
+.pinned-alert p{font:400 11px/1.5 var(--font-ui)}
+.pinned-alert small{font:500 8px var(--font-ui);letter-spacing:.03em}
