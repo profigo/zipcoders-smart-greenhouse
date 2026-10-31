@@ -31,6 +31,20 @@ function setupCommandCentre(){
   });
   actions.prepend(full);
  }
+ const viewToolbar=document.querySelector("#digitalTwin .industrial-heading");
+ if(viewToolbar&&!$("viewOnlyFullScreenToggle")){
+  const viewFull=document.createElement("button");
+  viewFull.id="viewOnlyFullScreenToggle";viewFull.className="twin-tool view-fullscreen-tool";viewFull.type="button";
+  viewFull.textContent="⛶ FULLSCREEN 3D VIEW";
+  viewFull.addEventListener("click",async()=>{
+   const view=document.querySelector("#digitalTwin .industrial-view");
+   try{
+    if(document.fullscreenElement===view){await document.exitFullscreen();}
+    else{if(document.fullscreenElement)await document.exitFullscreen();await view.requestFullscreen({navigationUI:"hide"});}
+   }catch(err){pinAlert("3D view fullscreen unavailable",err.message,"warning");}
+  });
+  viewToolbar.append(viewFull);
+ }
  const toolbar=document.querySelector("#digitalTwin .toolbar-right");
  if(toolbar&&!$("sceneFullScreenToggle")){
   const sceneFull=document.createElement("button");
@@ -68,6 +82,9 @@ function setupCommandCentre(){
  document.addEventListener("fullscreenchange",()=>{
   const active=!!document.fullscreenElement;
   const sceneActive=document.fullscreenElement===$("digitalTwin");
+  const viewActive=document.fullscreenElement===document.querySelector("#digitalTwin .industrial-view");
+  const viewFull=$("viewOnlyFullScreenToggle");
+  if(viewFull)viewFull.textContent=viewActive?"⛶ EXIT 3D VIEW":"⛶ FULLSCREEN 3D VIEW";
   const full=$("fullScreenToggle"),sceneFull=$("sceneFullScreenToggle");
   if(full)full.innerHTML=active&&!sceneActive?'<span>⛶</span> EXIT WORKSPACE FULL SCREEN':'<span>⛶</span> WORKSPACE FULL SCREEN';
   if(sceneFull)sceneFull.textContent=sceneActive?"⛶ EXIT GREENHOUSE FULLSCREEN":"⛶ FULLSCREEN GREENHOUSE";
@@ -96,7 +113,37 @@ const DEMO_USER="admin",DEMO_PASS="green2026";
 let simulation=true,masterOn=true,historyTemp=[],historyHumidity=[],tickCount=0;
 const data={temp:27,humidity:67,soil:54,lux:8200};
 const device={pump:false,fan:false,growlight:false};
-function showApp(){setupCommandCentre();pinAlert("Simulation workspace opened","Greenhouse command centre is ready. All process values are simulated.");$("loginScreen").classList.add("hidden");$("app").classList.remove("hidden");updateAll();startSimulation();}
+let rwandaMap=null;
+function setupRwandaMap(){
+ const host=$("rwandaLiveMap");
+ if(!host||rwandaMap||!window.L)return;
+ rwandaMap=L.map(host,{scrollWheelZoom:false}).setView([-1.94,29.87],8);
+ L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:18,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'}).addTo(rwandaMap);
+ const sites=[
+  {name:"Nyagatare",province:"Eastern Province",lat:-1.297,lon:30.328,kind:"Priority for climate-resilience assessment",note:"Eastern Rwanda is highlighted in climate-vulnerability reporting; assess water harvesting and efficient irrigation needs."},
+  {name:"Gatsibo",province:"Eastern Province",lat:-1.565,lon:30.435,kind:"Priority for climate-resilience assessment",note:"Eastern Province is exposed to dry spells; consider irrigation access and water-smart growing systems."},
+  {name:"Kayonza",province:"Eastern Province",lat:-1.879,lon:30.657,kind:"Irrigation and watershed focus",note:"Kayonza has established irrigation and watershed initiatives; assess opportunities for efficient protected horticulture."},
+  {name:"Kirehe",province:"Eastern Province",lat:-2.263,lon:30.653,kind:"Priority for irrigation assessment",note:"A documented focus area for drought resilience and irrigation development."},
+  {name:"Gisagara",province:"Southern Province",lat:-2.58,lon:29.76,kind:"Priority for climate-resilience assessment",note:"Southern Province is included in recent reporting on climate vulnerability and agricultural adaptation needs."},
+  {name:"Bugesera",province:"Eastern Province",lat:-2.22,lon:30.10,kind:"Priority for irrigation assessment",note:"An eastern agricultural district where water-smart farming and irrigation suitability merit field assessment."},
+  {name:"Musanze",province:"Northern Province",lat:-1.50,lon:29.63,kind:"Additional horticulture location",note:"A northern highland agriculture location; assess local crop, elevation and protected-cultivation suitability."}
+ ];
+ const high=L.divIcon({className:"map-marker-wrap",html:'<span class="map-marker map-marker-high"></span>',iconSize:[20,20],iconAnchor:[10,10]});
+ const support=L.divIcon({className:"map-marker-wrap",html:'<span class="map-marker map-marker-support"></span>',iconSize:[18,18],iconAnchor:[9,9]});
+ sites.forEach(site=>{
+  const marker=L.marker([site.lat,site.lon],{icon:site.kind.includes("Additional")?support:high}).addTo(rwandaMap);
+  marker.bindPopup('<div class="rwanda-popup"><b>'+site.name+'</b><small>'+site.province+'</small><strong>'+site.kind+'</strong><p>'+site.note+'</p></div>');
+  site.marker=marker;
+ });
+ const list=$("mapLocationList");
+ if(list)list.addEventListener("click",e=>{
+  const btn=e.target.closest("[data-map]");if(!btn)return;
+  const site=sites.find(x=>x.name===btn.dataset.map);if(site){rwandaMap.setView([site.lat,site.lon],11,{animate:true});site.marker.openPopup();}
+ });
+ window.addEventListener("resize",()=>{if(rwandaMap)rwandaMap.invalidateSize();});
+ setTimeout(()=>rwandaMap&&rwandaMap.invalidateSize(),250);
+}
+function showApp(){setupCommandCentre();pinAlert("Simulation workspace opened","Greenhouse command centre is ready. All process values are simulated.");$("loginScreen").classList.add("hidden");$("app").classList.remove("hidden");setupRwandaMap();updateAll();startSimulation();}
 $("loginForm").addEventListener("submit",e=>{e.preventDefault();if($("username").value.trim()===DEMO_USER&&$("password").value===DEMO_PASS){$("loginError").textContent="";showApp();}else $("loginError").textContent="Incorrect demo username or password.";});
 $("logout").addEventListener("click",()=>{$("app").classList.add("hidden");$("loginScreen").classList.remove("hidden");$("password").value="";});
 function logActivity(title,detail){pinAlert(title,detail,/high|low|critical|failed|error/i.test(title+" "+detail)?"warning":"info");const feed=$("activityFeed"),item=document.createElement("div");item.className="activity-item";const dot=document.createElement("i"),wrap=document.createElement("div"),b=document.createElement("b"),s=document.createElement("small");b.textContent=title;s.textContent=detail;wrap.append(b,s);item.append(dot,wrap);feed.prepend(item);while(feed.children.length>5)feed.lastChild.remove();}
