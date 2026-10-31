@@ -162,3 +162,50 @@ button,.secondary,.scenario-btn,.twin-tool{font-size:13px}
  #digitalTwin:fullscreen .scene-side-readout{max-height:48%;bottom:60px;top:auto}
  #digitalTwin:fullscreen .pinned-alerts{top:8px;right:8px;max-height:35vh}
 }
+
+
+/* Interactive Rwanda agriculture map */
+.rwanda-map-panel{margin-top:16px;overflow:hidden}
+.map-live-tag{display:inline-flex;align-items:center;gap:8px;padding:7px 10px;border:1px solid #355c4c;border-radius:20px;background:#172a22;color:#9ee6bd;font-size:11px;white-space:nowrap}
+.map-live-tag i{width:8px;height:8px;border-radius:50%;background:#48d995;box-shadow:0 0 0 4px #48d99522}
+.map-layout{display:grid;grid-template-columns:minmax(0,1fr) 275px;gap:15px;margin-top:15px}
+#rwandaLiveMap{height:390px;min-height:300px;border:1px solid #35424a;border-radius:10px;overflow:hidden;background:#1a252a;z-index:1}
+#rwandaLiveMap .leaflet-control-attribution{font-size:9px}
+#rwandaLiveMap .leaflet-popup-content-wrapper,#rwandaLiveMap .leaflet-popup-tip{background:#151b22;color:#edf4f2}
+#rwandaLiveMap .leaflet-popup-content{margin:12px 14px;min-width:190px}
+.map-marker-wrap{background:transparent;border:0}
+.map-marker{display:block;width:15px;height:15px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 5px #ef766455,0 2px 8px #0008}
+.map-marker-high{background:#ed765d}
+.map-marker-support{width:12px;height:12px;background:#8c9ff0;box-shadow:0 0 0 4px #8c9ff044,0 2px 8px #0008}
+.rwanda-popup b,.rwanda-popup small,.rwanda-popup strong{display:block}
+.rwanda-popup b{font-size:15px;color:#fff}
+.rwanda-popup small{font-size:11px;color:#9daeb6;margin:2px 0 8px}
+.rwanda-popup strong{font-size:11px;color:#f4b49f}
+.rwanda-popup p{font-size:11px;line-height:1.45;color:#d0d8dc;margin:6px 0 0}
+.map-side{display:flex;flex-direction:column;gap:12px;min-width:0}
+.map-focus{padding:15px;border:1px solid #3c344f;border-radius:10px;background:linear-gradient(140deg,#28213b,#1b202b)}
+.map-focus small{display:block;color:#c5b2ff;font-size:10px;letter-spacing:1px}
+.map-focus b{display:block;color:#f4f0ff;font-size:17px;margin:7px 0}
+.map-focus p{margin:0;color:#b4b2c1;font-size:12px;line-height:1.55}
+.map-legend{display:grid;gap:9px;padding:12px;border:1px solid #30323e;border-radius:9px;background:#191a22}
+.map-legend span{display:flex;align-items:center;gap:9px;color:#c9c8d2;font-size:11px}
+.map-legend i{width:10px;height:10px;border-radius:50%;display:inline-block}
+.priority-high{background:#ed765d;box-shadow:0 0 0 4px #ed765d22}
+.priority-support{background:#8c9ff0;box-shadow:0 0 0 4px #8c9ff022}
+.map-locations{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.map-locations button{display:flex;flex-direction:column;align-items:flex-start;gap:3px;padding:9px 10px;border:1px solid #343642;border-radius:8px;background:#20212a;color:#f0edf8;font-size:12px;text-align:left;cursor:pointer}
+.map-locations button:hover{border-color:#9c83dc;background:#2a2537}
+.map-locations small{font-size:10px;color:#9c9bab}
+.map-disclaimer{color:#9c9baa;font-size:10px;line-height:1.5}
+.map-source{color:#c6b5ff;font-size:11px;text-decoration:none}
+.map-source:hover{text-decoration:underline}
+/* A clean fullscreen canvas-only mode: no dashboard status header */
+.view-fullscreen-tool{white-space:nowrap}
+#digitalTwin .industrial-heading{align-items:center}
+#digitalTwin .industrial-view:fullscreen{width:100vw;height:100vh;min-height:100vh;border:0;border-radius:0;background:#09141b}
+#digitalTwin .industrial-view:fullscreen .three-canvas{width:100%;height:100%}
+#digitalTwin .industrial-view:fullscreen .view-corner{display:none}
+#digitalTwin .industrial-view:fullscreen .scene-side-readout{top:22px;right:22px;max-height:calc(100vh - 105px);overflow:auto}
+#digitalTwin .industrial-view:fullscreen .scene-bottom-strip{bottom:20px;left:22px;right:22px}
+@media(max-width:900px){.map-layout{grid-template-columns:1fr}.map-side{display:grid;grid-template-columns:1fr 1fr}.map-focus{grid-row:span 2}#rwandaLiveMap{height:350px}}
+@media(max-width:600px){.map-side{display:flex}.map-locations{grid-template-columns:1fr 1fr}#rwandaLiveMap{height:320px}.view-fullscreen-tool{font-size:10px;padding:8px}}
