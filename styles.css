@@ -133,3 +133,32 @@ button,.secondary,.scenario-btn,.twin-tool{font-size:13px}
  .view-corner{font-size:11px}
  .scene-bottom-strip{font-size:10px}
 }
+
+
+/* Dedicated immersive greenhouse view and accessible alert controls */
+#digitalTwin:fullscreen{
+ width:100vw;height:100vh;max-width:none;margin:0;padding:18px 22px;
+ overflow:auto;background:#091820;color:#eaf5f1;border:0;border-radius:0;
+}
+#digitalTwin:fullscreen .industrial-heading{padding:8px 4px 14px}
+#digitalTwin:fullscreen .industrial-toolbar{padding:10px 4px}
+#digitalTwin:fullscreen .industrial-view{height:calc(100vh - 255px);min-height:430px}
+#digitalTwin:fullscreen .three-canvas{height:100%}
+#digitalTwin:fullscreen .process-strip{margin-top:0}
+#digitalTwin:fullscreen .industrial-footnote{padding:9px 12px}
+#digitalTwin:fullscreen .scene-side-readout{max-height:calc(100% - 110px);overflow:auto}
+#digitalTwin:fullscreen .pinned-alerts{top:16px;right:18px;max-height:calc(100vh - 32px)}
+.alert-head-actions{display:flex;align-items:center;gap:12px}
+.pinned-alerts-head button{font-size:11px!important;font-weight:600!important;letter-spacing:0}
+#alertSoundToggle{color:#fff;background:#23553b;border:1px solid #4c8866;border-radius:6px;padding:6px 9px;cursor:pointer}
+#alertSoundToggle[aria-pressed="true"]{background:#176b48;border-color:#64c99a}
+.pinned-alert-title button{width:28px;height:28px;display:grid;place-items:center;border-radius:6px;font-size:22px!important;line-height:1}
+.pinned-alert-title button:hover{background:#edf2ee;color:#18271f}
+.pinned-alert{animation:alertArrive .18s ease-out}
+@keyframes alertArrive{from{opacity:0;transform:translateY(-7px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:700px){
+ #digitalTwin:fullscreen{padding:10px}
+ #digitalTwin:fullscreen .industrial-view{height:calc(100vh - 290px);min-height:380px}
+ #digitalTwin:fullscreen .scene-side-readout{max-height:48%;bottom:60px;top:auto}
+ #digitalTwin:fullscreen .pinned-alerts{top:8px;right:8px;max-height:35vh}
+}
