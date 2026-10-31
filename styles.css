@@ -83,3 +83,53 @@ h1,h2,h3{letter-spacing:0}
 .pinned-alert-title b{font:600 12px var(--font-ui)}
 .pinned-alert p{font:400 11px/1.5 var(--font-ui)}
 .pinned-alert small{font:500 8px var(--font-ui);letter-spacing:.03em}
+
+
+/* Readability pass: larger, clearer typography across the greenhouse dashboard */
+:root{--font-ui:"Roboto",Arial,sans-serif}
+html,body,button,input,select,textarea{font-family:var(--font-ui)!important}
+body{font-size:16px!important;line-height:1.55;font-weight:400}
+p,.muted,.footnote,.evidence-note,.industrial-footnote{font-size:14px;line-height:1.6}
+small,.metric-head,.metric-foot,.control-copy small,.panel-heading p{font-size:13px!important;line-height:1.45}
+label,.control-copy b,.crop-card b,.ops-card>b,.integrity-row{font-size:14px}
+button,.secondary,.scenario-btn,.twin-tool{font-size:13px}
+.topbar h1{font-size:22px;font-weight:700}
+.welcome h2{font-size:34px;font-weight:700;line-height:1.2}
+.section-title h2,.panel-heading h3{font-size:19px;font-weight:700;line-height:1.3}
+.metric-value{font-size:34px;font-weight:700}
+.metric-head,.metric-foot{letter-spacing:0}
+.industrial-heading h2{font-size:24px;font-weight:700}
+.industrial-heading p{font-size:14px;line-height:1.5}
+.industrial-toolbar,.toolbar-chip{font-size:13px}
+.three-loading{font-size:14px}
+.three-loading small{font-size:13px}
+.view-corner{font-size:12px;line-height:1.4}
+.view-corner b{font-size:14px}
+.scene-side-readout{width:285px}
+.readout-top,.scene-side-readout>small,.instrument-value span,.instrument-meta,.readout-hint{font-size:12px;line-height:1.5}
+.scene-side-readout h3{font-size:19px}
+.scene-side-readout p{font-size:13px;line-height:1.6}
+.instrument-value strong{font-size:34px}
+.instrument-meta b{font-size:12px}
+.scene-bottom-strip{font-size:12px;line-height:1.4}
+.scene-bottom-strip b{font-size:11px}
+.process-strip small,.process-strip span{font-size:12px;line-height:1.45}
+.process-strip b{font-size:29px}
+.pinned-alerts-head{font-size:12px}
+.pinned-alerts-head button{font-size:11px}
+.pinned-alert-title b{font-size:14px}
+.pinned-alert p{font-size:13px;line-height:1.5}
+.pinned-alert small{font-size:11px}
+.fullscreen-toggle{font-size:12px}
+.test-grid label,.crop-select,.water-compare,.advice-actions,.ops-table{font-size:13px}
+.ops-card p,.ops-card small,.integrity-row,.crop-stats,.adviser-content p{font-size:13px;line-height:1.55}
+.evidence-stats span{font-size:13px}
+@media(max-width:700px){
+ body{font-size:15px!important}
+ .welcome h2{font-size:29px}
+ .section-title h2,.panel-heading h3{font-size:18px}
+ .scene-side-readout{width:auto}
+ .scene-side-readout p{font-size:12px}
+ .view-corner{font-size:11px}
+ .scene-bottom-strip{font-size:10px}
+}
