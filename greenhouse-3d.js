@@ -35,7 +35,10 @@ function init(){
  gateGroup=new THREE.Group();gateGroup.position.set(-2,0,12.5);gateGroup.userData={id:'gate',name:'Main security gate',description:'Click the visible gate lock to open the PIN keypad. Enter 1-2-3-4 to unlock this simulated entrance.',type:'access'};scene.add(gateGroup);deviceMeshes.gate=gateGroup;
  beam(gateGroup,[0,.3,0],[4,.3,0],.07,fenceMat);beam(gateGroup,[0,2.2,0],[4,2.2,0],.07,fenceMat);
  for(let x=.12;x<4;x+=.42)beam(gateGroup,[x,.35,0],[x,2.18,0],.035,fenceMat);
- beam(gateGroup,[0,.45,0],[4,2.05,0],.045,fenceDark);\n // Visible padlock mounted on the moving gate leaf.\n const lockBody=box(gateGroup,2,1.05,-.12,.42,.48,.2,mat('#facc15',.3,.55));\n const lockShackle=new THREE.Mesh(new THREE.TorusGeometry(.16,.045,8,18),mat('#dbeafe',.28,.7));lockShackle.position.set(2,1.34,-.13);gateGroup.add(lockShackle);
+ beam(gateGroup,[0,.45,0],[4,2.05,0],.045,fenceDark);
+ // Visible padlock mounted on the moving gate leaf.
+ const lockBody=box(gateGroup,2,1.05,-.12,.42,.48,.2,mat('#facc15',.3,.55));
+ const lockShackle=new THREE.Mesh(new THREE.TorusGeometry(.16,.045,8,18),mat('#dbeafe',.28,.7));lockShackle.position.set(2,1.34,-.13);gateGroup.add(lockShackle);
  // Trees around the fenced compound, with low-polygon canopies for browser performance.
  function makeTree(x,z,scale=1){const g=new THREE.Group();g.position.set(x,0,z);g.scale.setScalar(scale);scene.add(g);cylinder(g,0,1.15,0,.22,.32,2.3,treeTrunk,8);for(const [ox,oy,oz,r] of [[0,2.55,0,1.05],[-.55,2.2,.12,.72],[.55,2.2,-.1,.72],[0,3.15,.1,.72]]){const crown=new THREE.Mesh(new THREE.IcosahedronGeometry(r,1),Math.random()>.5?treeLeaf:treeLeaf2);crown.position.set(ox,oy,oz);g.add(crown);}return g;}
  [[-18,-10],[-18,-5],[-18,1],[-18,7],[-18,12],[18,-10],[18,-5],[18,1],[18,7],[18,12],[-12,-15],[-6,-15],[0,-15],[6,-15],[12,-15],[-12,15],[6,15],[12,15]].forEach((p,i)=>makeTree(p[0],p[1],i%3===0?1.12:.9));
