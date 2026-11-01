@@ -32,10 +32,10 @@ function init(){
  // Front fence leaves a four-metre vehicle/personnel entrance.
  for(const side of [[-16,-2],[2,16]]){beam(scene,[side[0],.35,12.5],[side[1],.35,12.5],.055,fenceMat);beam(scene,[side[0],2.25,12.5],[side[1],2.25,12.5],.07,fenceMat);}
  post(-2,12.5);post(2,12.5);
- gateGroup=new THREE.Group();gateGroup.position.set(-2,0,12.5);gateGroup.userData={id:'gate',name:'Main security gate',description:'Controlled entrance gate for the greenhouse site. Enter the demo credentials in the access panel to open the simulated gate.',type:'access'};scene.add(gateGroup);deviceMeshes.gate=gateGroup;
+ gateGroup=new THREE.Group();gateGroup.position.set(-2,0,12.5);gateGroup.userData={id:'gate',name:'Main security gate',description:'Click the visible gate lock to open the PIN keypad. Enter 1-2-3-4 to unlock this simulated entrance.',type:'access'};scene.add(gateGroup);deviceMeshes.gate=gateGroup;
  beam(gateGroup,[0,.3,0],[4,.3,0],.07,fenceMat);beam(gateGroup,[0,2.2,0],[4,2.2,0],.07,fenceMat);
  for(let x=.12;x<4;x+=.42)beam(gateGroup,[x,.35,0],[x,2.18,0],.035,fenceMat);
- beam(gateGroup,[0,.45,0],[4,2.05,0],.045,fenceDark);
+ beam(gateGroup,[0,.45,0],[4,2.05,0],.045,fenceDark);\n // Visible padlock mounted on the moving gate leaf.\n const lockBody=box(gateGroup,2,1.05,-.12,.42,.48,.2,mat('#facc15',.3,.55));\n const lockShackle=new THREE.Mesh(new THREE.TorusGeometry(.16,.045,8,18),mat('#dbeafe',.28,.7));lockShackle.position.set(2,1.34,-.13);gateGroup.add(lockShackle);
  // Trees around the fenced compound, with low-polygon canopies for browser performance.
  function makeTree(x,z,scale=1){const g=new THREE.Group();g.position.set(x,0,z);g.scale.setScalar(scale);scene.add(g);cylinder(g,0,1.15,0,.22,.32,2.3,treeTrunk,8);for(const [ox,oy,oz,r] of [[0,2.55,0,1.05],[-.55,2.2,.12,.72],[.55,2.2,-.1,.72],[0,3.15,.1,.72]]){const crown=new THREE.Mesh(new THREE.IcosahedronGeometry(r,1),Math.random()>.5?treeLeaf:treeLeaf2);crown.position.set(ox,oy,oz);g.add(crown);}return g;}
  [[-18,-10],[-18,-5],[-18,1],[-18,7],[-18,12],[18,-10],[18,-5],[18,1],[18,7],[18,12],[-12,-15],[-6,-15],[0,-15],[6,-15],[12,-15],[-12,15],[6,15],[12,15]].forEach((p,i)=>makeTree(p[0],p[1],i%3===0?1.12:.9));
@@ -80,7 +80,7 @@ function init(){
  const renderPin=()=>{if(pinDisplay)pinDisplay.textContent=gatePin.padEnd(4,'_').split('').join(' ');};
  const closeKeypad=()=>{if(keypad)keypad.hidden=true;gatePin='';renderPin();};
  const showKeypad=()=>{if(keypad)keypad.hidden=false;gatePin='';renderPin();if(gateStatus){gateStatus.textContent=gateUnlocked?'UNLOCKED · GATE OPEN':'LOCKED · ENTER PIN';gateStatus.className=gateUnlocked?'gate-status gate-ok':'gate-status';}};
- document.querySelectorAll('[data-gate-digit]').forEach(button=>button.addEventListener('click',()=>{if(gatePin.length<4){gatePin+=button.dataset.gateDigit;renderPin();}}));
+ document.querySelectorAll('[data-gate-digit]').forEach(button=>button.addEventListener('click',()=>{if(gatePin.length<4){gatePin+=button.dataset.gateDigit;renderPin();if(gatePin.length===4)enterGatePin();}}));
  $('gatePinClear')?.addEventListener('click',()=>{gatePin='';renderPin();});
  const enterGatePin=()=>{
   if(gatePin==='1234'){
