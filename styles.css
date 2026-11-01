@@ -404,3 +404,31 @@ footer b,footer span{color:var(--green2)}
 .gate-access-fields button:last-child{background:#173b2a;border-color:#16a34a}
 .gate-access-panel>small{display:block;margin-top:8px;color:#b8c5d5;font-size:9px;line-height:1.4}
 @media(max-width:700px){.gate-access-panel{left:10px;bottom:48px;width:min(330px,calc(100% - 20px));padding:10px}.gate-access-fields{grid-template-columns:1fr 1fr}.gate-access-heading{align-items:flex-start;flex-direction:column}}
+
+/* Compact click-to-open simulated gate keypad */
+.gate-keypad{position:absolute;z-index:8;left:20px;bottom:20px;width:250px;padding:14px;background:#07172ef5;border:1px solid #2563eb;border-radius:13px;box-shadow:0 16px 42px #0009;color:#fff;backdrop-filter:blur(12px)}
+.gate-keypad[hidden]{display:none!important}
+.gate-keypad-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.gate-keypad-head>div{display:grid;gap:4px}.gate-keypad-head b{font-size:11px;letter-spacing:.08em}.gate-keypad-head small{font-size:9px;color:#facc15;font-weight:800}
+.gate-keypad-head>button{width:27px;height:27px;border:0;border-radius:6px;background:#19314d;color:#fff;font-size:20px;cursor:pointer}
+.gate-pin-display{margin:12px 0;padding:10px;text-align:center;background:#020b16;border:1px solid #29466a;border-radius:7px;color:#fff;font-size:21px;font-weight:800;letter-spacing:.32em}
+.gate-keypad-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.gate-keypad-grid button,.gate-relock{min-height:34px;border:1px solid #28517d;border-radius:7px;background:#102b4b;color:#fff;font-size:12px;font-weight:800;cursor:pointer}
+.gate-keypad-grid button:active{background:#2563eb}.gate-keypad-grid button:nth-child(10){font-size:9px;color:#facc15}
+.gate-keypad-grid button:last-child{background:#17613d;border-color:#16a34a}
+.gate-relock{width:100%;margin-top:8px;background:#713b21;border-color:#d97706}
+.gate-demo-note{display:block;margin-top:8px;text-align:center;color:#9fb5ce;font-size:9px}
+/* Clean model-only fullscreen: keep the alert stack, hide all dashboard chrome. */
+#digitalTwin:fullscreen{width:100vw;height:100vh;max-width:none;margin:0;padding:0;overflow:hidden;background:#07111f;border:0;border-radius:0}
+#digitalTwin:fullscreen>.industrial-heading,
+#digitalTwin:fullscreen>.industrial-toolbar,
+#digitalTwin:fullscreen>.process-strip,
+#digitalTwin:fullscreen>.industrial-footnote{display:none!important}
+#digitalTwin:fullscreen>.industrial-view{width:100vw;height:100vh;min-height:100vh;margin:0;border:0;border-radius:0}
+#digitalTwin:fullscreen .three-canvas{inset:0;width:100%;height:100%}
+#digitalTwin:fullscreen .view-corner,
+#digitalTwin:fullscreen .scene-side-readout,
+#digitalTwin:fullscreen .scene-bottom-strip{display:none!important}
+#digitalTwin:fullscreen .gate-keypad{left:20px;bottom:20px}
+#digitalTwin:fullscreen .pinned-alerts{position:fixed;top:16px;right:16px;z-index:10000;width:min(370px,calc(100vw - 32px));max-height:calc(100vh - 32px);overflow:auto}
+@media(max-width:600px){#digitalTwin:fullscreen .gate-keypad{left:10px;bottom:10px;width:235px}#digitalTwin:fullscreen .pinned-alerts{top:8px;right:8px;width:min(330px,calc(100vw - 16px));max-height:40vh}}
