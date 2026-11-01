@@ -392,3 +392,15 @@ p,.muted,.welcome p,.section-title p,.panel-heading p,.metric-foot,.chart-note,
 footer{color:var(--muted);border-color:var(--line)}
 footer b,footer span{color:var(--green2)}
 @media(max-width:700px){.sidebar{background:var(--nav);border-bottom:1px solid var(--line)}}
+
+/* Secure greenhouse site extension */
+.gate-access-panel{position:absolute;left:18px;bottom:54px;z-index:5;width:min(390px,calc(100% - 36px));padding:13px 14px;background:#101d2ef2;border:1px solid #2563eb;border-radius:12px;box-shadow:0 12px 34px #0008;backdrop-filter:blur(10px);color:#fff}
+.gate-access-heading{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:9px;font-size:11px;letter-spacing:.08em}
+.gate-status{color:#facc15;font-size:9px;font-weight:800}.gate-status.gate-ok{color:#22c55e}.gate-status.gate-denied{color:#facc15}
+.gate-access-fields{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.gate-access-fields label{display:grid;gap:4px;color:#b8c5d5;font-size:9px;font-weight:800}
+.gate-access-fields input{width:100%;min-width:0;padding:8px 9px;border:1px solid #31445d;border-radius:6px;background:#081321;color:#fff;font:600 12px Roboto,Arial,sans-serif}
+.gate-access-fields button{padding:8px 9px;border:1px solid #2563eb;border-radius:6px;background:#2563eb;color:#fff;font:800 10px Roboto,Arial,sans-serif;cursor:pointer}
+.gate-access-fields button:last-child{background:#173b2a;border-color:#16a34a}
+.gate-access-panel>small{display:block;margin-top:8px;color:#b8c5d5;font-size:9px;line-height:1.4}
+@media(max-width:700px){.gate-access-panel{left:10px;bottom:48px;width:min(330px,calc(100% - 20px));padding:10px}.gate-access-fields{grid-template-columns:1fr 1fr}.gate-access-heading{align-items:flex-start;flex-direction:column}}
