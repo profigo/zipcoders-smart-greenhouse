@@ -16,7 +16,7 @@ function makeSensor(id,name,description,x,y,z,code){let g=new THREE.Group();g.po
 function makeActuator(id,name,description,x,y,z,code){let g=new THREE.Group();g.position.set(x,y,z);scene.add(g);let base=box(g,0,0,0,.8,.55,.65,dark);let top=box(g,0,.3,0,.72,.1,.58,steel);let lamp=new THREE.Mesh(new THREE.SphereGeometry(.09,12,10),greenGlow);lamp.position.set(.34,.39,.22);g.add(lamp);let tag=labelSprite(code,'#a7f4cb');tag.position.set(0,.9,0);tag.scale.set(1.2,.3,1);g.add(tag);g.userData={id,name,description,code,type:'actuator',lamp};deviceMeshes[id]=g;return g;}
 function init(){
  scene=new THREE.Scene();scene.background=new THREE.Color('#13252c');scene.fog=new THREE.Fog('#13252c',28,65);
- camera=new THREE.PerspectiveCamera(42,host.clientWidth/host.clientHeight,.1,150);camera.position.set(19,16,21);
+ camera=new THREE.PerspectiveCamera(42,host.clientWidth/host.clientHeight,.1,150);camera.position.set(25,20,28);
  renderer=new THREE.WebGLRenderer({antialias:true,alpha:false});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(host.clientWidth,host.clientHeight);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.15;host.replaceChildren(renderer.domElement);
  controls=new OrbitControls(camera,renderer.domElement);controls.target.set(0,1.2,0);controls.enableDamping=true;controls.maxPolarAngle=Math.PI*.49;controls.minDistance=12;controls.maxDistance=58;
  scene.add(new THREE.HemisphereLight('#d8f7ed','#25352d',2.0));let sun=new THREE.DirectionalLight('#fff0d2',3.2);sun.position.set(-10,20,9);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);scene.add(sun);let fill=new THREE.PointLight('#58bce0',35,32);fill.position.set(7,8,-4);scene.add(fill);
@@ -24,7 +24,7 @@ function init(){
  // Secure site perimeter: fenced boundary, controlled entrance and landscaped trees.
  const fenceMat=mat('#87949b',.48,.62),fenceDark=mat('#34495e',.42,.65),treeTrunk=mat('#765036'),treeLeaf=mat('#267a43'),treeLeaf2=mat('#3c9954');
  const post=(x,z)=>box(scene,x,1.25,z,.22,2.5,.22,fenceDark);
- for(let x=-16;x<=16;x+=2){post(x,-12.5);post(x,12.5);}
+ for(let x=-16;x<=16;x+=2){post(x,-12.5);if(x<-2||x>2)post(x,12.5);}
  for(let z=-10.5;z<=10.5;z+=2){post(-16,z);post(16,z);}
  // Back and side fence rails.
  for(const z of [-12.5]){beam(scene,[-16,.35,z],[16,.35,z],.055,fenceMat);beam(scene,[-16,2.25,z],[16,2.25,z],.07,fenceMat);}
