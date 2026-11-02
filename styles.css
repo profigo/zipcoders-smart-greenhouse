@@ -612,3 +612,29 @@ footer b,footer span{color:var(--green2)}
 @keyframes intro-scan{0%,100%{transform:translateY(-60px);opacity:0}20%,80%{opacity:.8}50%{transform:translateY(260px);opacity:.65}}
 @media(max-width:800px){.intro-head{flex-wrap:wrap}.intro-duration{display:none}.intro-greenhouse{height:30vh;min-height:190px}.intro-content>div:first-child{padding-left:0}.intro-film-caption{margin-top:12px;font-size:7px}}
 @media(prefers-reduced-motion:reduce){.intro-sun,.intro-scanline{animation:none!important}}
+
+
+/* Six-scene ZIPCODERS film treatment */
+.project-intro{background:radial-gradient(ellipse at 78% 48%,#14513b 0,transparent 43%),linear-gradient(120deg,#04111d,#092337 58%,#061a1d)}
+.project-intro:after{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;background:linear-gradient(90deg,#03101dcc 0%,transparent 58%),linear-gradient(0deg,#020a12bb,transparent 34%);transition:background .8s ease}
+.intro-head,.intro-content,.intro-bottom,.intro-note{z-index:2}
+.intro-content>div:first-child{transition:opacity .45s ease,transform .65s ease}
+.intro-content h1{font-weight:800;text-shadow:0 8px 35px #0008}
+.intro-content h1 em{background:linear-gradient(90deg,#9af0b4,#22c55e 55%,#facc15);-webkit-background-clip:text;background-clip:text;color:transparent}
+.intro-greenhouse{transition:transform 1.2s ease,filter 1.2s ease}
+.project-intro[data-scene="0"] .intro-greenhouse{transform:scale(1.06);filter:drop-shadow(0 0 50px #facc1544)}
+.project-intro[data-scene="1"] .intro-greenhouse{filter:grayscale(.7) brightness(.68);transform:scale(.94)}
+.project-intro[data-scene="2"] .intro-greenhouse{filter:saturate(1.35) brightness(1.08);transform:scale(1.02)}
+.project-intro[data-scene="3"] .intro-greenhouse{filter:saturate(1.5) drop-shadow(0 0 38px #22c55e55);transform:scale(1.08)}
+.project-intro[data-scene="4"] .intro-greenhouse{filter:saturate(1.25) brightness(1.1);transform:scale(1.02)}
+.project-intro[data-scene="5"] .intro-content{grid-template-columns:1fr;text-align:center;justify-items:center}
+.project-intro[data-scene="5"] .intro-content>div:first-child{max-width:850px}
+.project-intro[data-scene="5"] .intro-greenhouse{position:absolute;inset:12% 15%;opacity:.2;filter:blur(1px) saturate(1.4);pointer-events:none}
+.project-intro[data-scene="5"] .intro-content p{margin-inline:auto}
+.project-intro[data-scene="5"] .intro-chapters,.project-intro[data-scene="5"] .intro-film-caption{justify-content:center}
+.intro-chapters span{transition:all .35s ease}
+.intro-progress{width:min(34vw,380px);max-width:none;border-radius:99px;overflow:hidden}
+.intro-progress i{display:block;height:100%;width:0;transition:width .12s linear}
+.intro-bottom{border-top:1px solid #ffffff20}
+.intro-note{letter-spacing:.7px;text-align:center;font-size:9px}
+@media(max-width:800px){.project-intro[data-scene="5"] .intro-content{display:grid}.project-intro[data-scene="5"] .intro-greenhouse{inset:20% 2%}.intro-progress{width:28vw}}
