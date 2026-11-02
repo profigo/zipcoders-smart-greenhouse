@@ -1,5 +1,38 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#071b16"><title>ZIPCODERS | Smart Greenhouse</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""><link rel="stylesheet" href="styles.css"></head><body>
-<div id="loginScreen" class="login-screen"><div class="login-art"><div class="brand light"><div class="brand-mark">Z<span>G</span></div><div><b>ZIPCODERS</b><small>AGRI-INTELLIGENCE</small></div></div><div class="art-copy"><span class="eyebrow">NISR 2026 HACKATHON · TRACK 1</span><h1>Grow smarter.<br><em>Harvest better.</em></h1><p>Precision greenhouse monitoring designed to help farmers protect crops, conserve water and make confident decisions.</p><div class="art-points"><span>✦ Smart monitoring</span><span>✦ Resource efficiency</span><span>✦ Actionable insights</span></div></div><div class="art-bottom">A smarter growing future starts with better information.</div></div><div class="login-side"><form id="loginForm" class="login-card"><div class="mobile-brand brand"><div class="brand-mark">Z<span>G</span></div><div><b>ZIPCODERS</b><small>AGRI-INTELLIGENCE</small></div></div><span class="eyebrow">WELCOME BACK</span><h2>Sign in to your farm</h2><p class="muted">Access your greenhouse monitoring and control centre.</p><label for="username">Username</label><div class="field"><span>◉</span><input id="username" value="admin" required></div><label for="password">Password</label><div class="field"><span>⌑</span><input id="password" type="password" value="green2026" required></div><p id="loginError" class="error" role="alert"></p><button class="primary full" type="submit">Sign in to dashboard <span>→</span></button><div class="demo-credentials"><b>DEMO ACCESS</b><span>Username: <strong>admin</strong></span><span>Password: <strong>green2026</strong></span></div><small class="security-note">Demo interface only · hardware not connected.</small></form></div></div>
+<div id="loginScreen" class="login-screen">
+  <div class="login-atmosphere" aria-hidden="true">
+    <div class="login-grid"></div><div class="ambient ambient-one"></div><div class="ambient ambient-two"></div>
+    <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
+    <div class="floating-leaf leaf-one">✦</div><div class="floating-leaf leaf-two">✧</div><div class="floating-leaf leaf-three">✦</div>
+    <div class="greenhouse-outline"><span></span><i></i><b></b></div>
+  </div>
+  <div class="login-art">
+    <div class="brand light"><div class="brand-mark">Z<span>G</span></div><div><b>ZIPCODERS</b><small>SMART GREENHOUSE SYSTEM</small></div></div>
+    <div class="art-copy">
+      <span class="eyebrow"><i class="login-live-dot"></i> INTELLIGENT AGRICULTURE PLATFORM</span>
+      <h1>Grow with<br><em>intelligence.</em></h1>
+      <p>One connected workspace to monitor growing conditions, automate greenhouse processes and make better farming decisions.</p>
+      <div class="art-points"><span><i>✓</i> Climate monitoring</span><span><i>✓</i> Smart irrigation</span><span><i>✓</i> Crop intelligence</span></div>
+    </div>
+    <div class="art-bottom"><span class="art-bottom-mark">ZG</span><span>PRECISION GROWING. SMARTER HARVESTS.</span><span class="art-version">GH-OS / 2026</span></div>
+  </div>
+  <div class="login-side">
+    <form id="loginForm" class="login-card">
+      <div class="mobile-brand brand"><div class="brand-mark">Z<span>G</span></div><div><b>ZIPCODERS</b><small>SMART GREENHOUSE</small></div></div>
+      <div class="login-card-top"><span class="eyebrow">GREENHOUSE CONTROL CENTRE</span><span class="secure-pill"><i></i> SECURE ACCESS</span></div>
+      <h2>Welcome back<span>.</span></h2>
+      <p class="muted login-intro">Sign in to continue to your growing environment.</p>
+      <label for="username">USERNAME</label>
+      <div class="field login-field"><span class="field-icon">◉</span><input id="username" name="username" value="admin" autocomplete="username" placeholder="Enter your username" required></div>
+      <label for="password">PASSWORD</label>
+      <div class="field login-field"><span class="field-icon">⌑</span><input id="password" name="password" type="password" value="green2026" autocomplete="current-password" placeholder="Enter your password" required></div>
+      <p id="loginError" class="error" role="alert" aria-live="polite"></p>
+      <button class="primary full login-submit" type="submit"><span>ENTER GREENHOUSE</span><b>→</b></button>
+      <div class="demo-credentials"><div class="demo-heading"><b>DEMO ACCOUNT</b><span>READY TO EXPLORE</span></div><div><span>Username</span><strong>admin</strong></div><div><span>Password</span><strong>green2026</strong></div></div>
+      <div class="login-foot"><span>© 2026 ZIPCODERS</span><span>SMART GROWING STARTS HERE</span></div>
+    </form>
+  </div>
+</div>
 <div id="app" class="app hidden"><aside class="sidebar"><div class="brand light"><div class="brand-mark">Z<span>G</span></div><div><b>ZIPCODERS</b><small>GREENHOUSE OS</small></div></div><div class="side-label">WORKSPACE</div><nav><a class="nav active" href="#overview">▦ <span>Overview</span></a><a class="nav" href="#monitoring">⌁ <span>Monitoring</span></a><a class="nav" href="#controls">◉ <span>Control panel</span></a><a class="nav" href="#crops">♧ <span>Crop manager</span></a><a class="nav" href="#advisor">✧ <span>AI farm adviser</span></a></nav><div class="side-bottom"><div class="farm-mini"><span class="status-dot"></span><div><b>Greenhouse A</b><small>Interactive simulation</small></div></div><button id="logout" class="logout">↪ Sign out</button></div></aside>
 <main class="main"><header class="topbar"><div><div class="crumb">WORKSPACE / <b>OVERVIEW</b></div><h1>Greenhouse command centre</h1></div><div class="top-actions"><label class="language-picker">🌐 <select id="languageSelect" aria-label="Language"><option value="en">EN</option><option value="fr">FR</option><option value="rw">KIN</option></select></label><span class="demo-tag"><i></i> SIMULATION MODE</span><div class="avatar">A</div><div class="user-label"><b>Administrator</b><small>Farm manager</small></div></div></header>
 <section class="welcome" id="overview"><div><span class="eyebrow">NISR 2026 HACKATHON · GREENHOUSE A</span><h2>Your crops, <em>in focus.</em></h2><p>Monitor the environment, test automation and see how your greenhouse responds.</p></div><div class="health-card"><div class="health-ring"><strong id="healthScore">92</strong><small>/100</small></div><div><small>ENVIRONMENT SCORE</small><b id="healthLabel">Good conditions</b><span id="systemSummary">Automation ready · demo</span></div></div></section>
