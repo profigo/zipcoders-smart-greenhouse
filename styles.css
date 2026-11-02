@@ -821,3 +821,12 @@ body{background:#07131c;color:#eef5f5}
 @media(max-width:1050px){.reference-dashboard-grid{grid-template-columns:minmax(0,1fr) minmax(270px,320px)}}
 @media(max-width:900px){.reference-dashboard-grid{grid-template-columns:1fr}.reference-side{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start}.scene-side-readout{max-height:none}.reference-extra-insights{min-width:0}.industrial-view{height:620px}}
 @media(max-width:620px){.reference-side{display:flex}.scene-side-readout{max-height:none;padding:14px}.industrial-view{height:560px}.scene-side-readout p{font-size:11px}.instrument-value strong{font-size:28px}}
+
+/* Clear, deliberate controls for the currently selected digital-twin object */
+.inspector-action{display:block;width:100%;margin:12px 0 5px;padding:12px 14px;border:1px solid #3caa73;border-radius:7px;background:linear-gradient(100deg,#16633f,#167a50);color:#fff;font:800 12px Inter,Arial,sans-serif;letter-spacing:.045em;cursor:pointer;transition:background .18s,border-color .18s,transform .18s}
+.inspector-action:hover:not(:disabled){background:linear-gradient(100deg,#1c8051,#159461);transform:translateY(-1px)}
+.inspector-action:disabled{cursor:not-allowed;opacity:.48;background:#253943;border-color:#42545a;color:#c0d0d2}
+.inspector-action-note{display:block;margin:0 0 10px;color:#8fa9ad;font-size:10px;line-height:1.45}
+.inspector-action[hidden],.inspector-action-note[hidden]{display:none}
+.three-canvas canvas{cursor:grab}
+.three-canvas canvas:active{cursor:grabbing}
