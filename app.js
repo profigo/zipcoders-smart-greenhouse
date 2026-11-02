@@ -143,17 +143,46 @@ function setupRwandaMap(){
  window.addEventListener("resize",()=>{if(rwandaMap)rwandaMap.invalidateSize();});
  setTimeout(()=>rwandaMap&&rwandaMap.invalidateSize(),250);
 }
-let introScene=0,introTimer=null;
+let introScene=0,introTimer=null,introStartedAt=0,introTick=null;
 const introSlides=[
- ["THE FUTURE OF FARMING","Grow smarter. Waste less.","Discover how ZIPCODERS brings connected monitoring, intelligent control and practical digital tools into greenhouse farming."],
- ["01 · MONITOR THE ENVIRONMENT","See what your crops need.","Explore a digital greenhouse concept with temperature, humidity, soil-moisture and light monitoring in one workspace."],
- ["02 · RESPOND WITH CONTROL","From insight to action.","Demonstrate how rule-based automation can model irrigation, ventilation and grow-light responses to changing conditions."],
- ["03 · BUILT FOR A SMARTER FUTURE","Technology for resilient growing.","Our project demonstrates a practical direction for data-informed greenhouse management and more deliberate use of farm resources."]
+ {time:8000,chapter:"01 OPENING",kicker:"ZIPCODERS PRESENTS",title:"A new dawn<br><em>for agriculture.</em>",text:"Smarter growing begins when nature and technology work together."},
+ {time:10000,chapter:"02 THE CHALLENGE",kicker:"THE CHALLENGE",title:"Farming faces<br><em>new pressure.</em>",text:"Changing weather, water stress and uncertain growing conditions make every farming decision matter."},
+ {time:14000,chapter:"03 OUR INNOVATION",kicker:"OUR INNOVATION",title:"Observe. Understand.<br><em>Respond.</em>",text:"A connected greenhouse concept brings environmental sensing, smart irrigation and automated control into one system."},
+ {time:16000,chapter:"04 LIVE PROJECT SHOWCASE",kicker:"INSIDE ZIPCODERS GH-01",title:"Explore the<br><em>digital twin.</em>",text:"A closer look at our interactive greenhouse model, process equipment and command-centre controls. Values shown are simulated."},
+ {time:12000,chapter:"05 THE IMPACT",kicker:"BUILT FOR RWANDA",title:"Grow resilient.<br><em>Use resources wisely.</em>",text:"Our vision: support climate-smart agriculture through accessible technology, better visibility and informed decisions."},
+ {time:5000,chapter:"06 CLOSING",kicker:"ZIPCODERS · SMART GREENHOUSE",title:"The future is<br><em>growing.</em>",text:"ZIPCODERS Smart Greenhouse · NISR 2026 Big Data Hackathon"}
 ];
-function renderIntro(){const s=introSlides[introScene];$("introKicker").textContent=s[0];$("introTitle").textContent=s[1];$("introText").textContent=s[2];$("introCounter").textContent=String(introScene+1).padStart(2,"0")+" / 04";$("introProgress").style.width=((introScene+1)*25)+"%";document.querySelectorAll(".intro-chapters span").forEach((el,i)=>el.classList.toggle("active",i===introScene));}
-function stopIntro(){if(introTimer){clearInterval(introTimer);introTimer=null;}}
+const introTotal=introSlides.reduce((sum,s)=>sum+s.time,0);
+function renderIntro(){
+ const s=introSlides[introScene],root=$("projectIntro");
+ root.dataset.scene=String(introScene);
+ $("introKicker").textContent=s.kicker;
+ $("introTitle").innerHTML=s.title;
+ $("introText").textContent=s.text;
+ $("introCounter").textContent=String(introScene+1).padStart(2,"0")+" / 06";
+ $("introProgress").style.width=(introSlides.slice(0,introScene).reduce((n,x)=>n+x.time,0)/introTotal*100)+"%";
+ document.querySelectorAll(".intro-chapters span").forEach((el,i)=>{el.classList.toggle("active",i===introScene);el.textContent=String(i+1).padStart(2,"0")+" "+introSlides[i].chapter.split(" ").slice(1).join(" ");});
+}
+function stopIntro(){if(introTimer){clearTimeout(introTimer);introTimer=null;}if(introTick){clearInterval(introTick);introTick=null;}}
+function advanceIntro(){
+ if(introScene<introSlides.length-1){introScene++;renderIntro();scheduleIntroScene();}
+ else stopIntro();
+}
+function scheduleIntroScene(){stopIntro();introTimer=setTimeout(advanceIntro,introSlides[introScene].time);}
 function enterGreenhouse(){stopIntro();$("projectIntro").classList.add("hidden");$("app").classList.remove("hidden");setupCommandCentre();pinAlert("Simulation workspace opened","Greenhouse command centre is ready. All process values are simulated.");setupRwandaMap();updateAll();startSimulation();}
-function showProjectIntro(){$("loginScreen").classList.add("hidden");$("projectIntro").classList.remove("hidden");introScene=0;renderIntro();stopIntro();introTimer=setInterval(()=>{if(introScene<3){introScene++;renderIntro();}else stopIntro();},6500);}
+function showProjectIntro(){
+ $("loginScreen").classList.add("hidden");$("projectIntro").classList.remove("hidden");
+ introScene=0;renderIntro();stopIntro();scheduleIntroScene();
+ introTick=setInterval(()=>{
+  const elapsed=Date.now()-introStartedAt;
+  if(introStartedAt===0)introStartedAt=Date.now();
+  const sceneElapsed=Date.now()-introStartedAt;
+  const completed=introSlides.slice(0,introScene).reduce((n,x)=>n+x.time,0);
+  const current=Math.min(introSlides[introScene].time,sceneElapsed);
+  $("introProgress").style.width=((completed+current)/introTotal*100)+"%";
+ },100);
+ introStartedAt=Date.now();
+}
 $("loginForm").addEventListener("submit",e=>{e.preventDefault();if($("username").value.trim()===DEMO_USER&&$("password").value===DEMO_PASS){$("loginError").textContent="";showProjectIntro();}else $("loginError").textContent="Incorrect demo username or password.";});
 $("introContinue").addEventListener("click",enterGreenhouse);
 $("introSkip").addEventListener("click",enterGreenhouse);
