@@ -29,14 +29,14 @@ function makePlant(parent,x,z,index,cropIndex){
  const look=cropLooks[cropIndex],g=new THREE.Group();g.position.set(x,.48,z);parent.add(g);
  const leafMaterial=cropLeafMaterials[cropIndex],fruitMaterial=cropFruitMaterials[cropIndex];
  const low=['LETTUCE','SPINACH','KALE','STRAWBERRY'].includes(look.name);
- const height=low?.42:.72;
+ const height=low ? .42 : .72;
  cylinder(g,0,height*.42,0,.025,.035,height,mat('#4c8e4b'),7);
  const count=look.shape==='rosette'?9:look.shape==='ruffled'?10:7;
  for(let k=0;k<count;k++){
   const a=k*Math.PI*2/count+index*.13;
-  const leaf=new THREE.Mesh(new THREE.SphereGeometry(look.shape==='broad'||look.shape==='head'?.19:.16,9,7),leafMaterial);
-  const spread=look.shape==='rosette'||look.shape==='head'?.29:.22;
-  leaf.scale.set(look.shape==='ruffled'?.9:1.15,.22,look.shape==='broad'?.42:.72);
+  const leaf=new THREE.Mesh(new THREE.SphereGeometry((look.shape==='broad'||look.shape==='head') ? .19 : .16,9,7),leafMaterial);
+  const spread=(look.shape==='rosette'||look.shape==='head') ? .29 : .22;
+  leaf.scale.set(look.shape==='ruffled' ? .9 : 1.15,.22,look.shape==='broad' ? .42 : .72);
   leaf.position.set(Math.cos(a)*spread,.12+(k%3)*.055,Math.sin(a)*spread);
   leaf.rotation.y=a;leaf.rotation.z=Math.cos(a)*.42;g.add(leaf);
   plantLeaves.push({leaf,phase:index+k});
@@ -119,7 +119,7 @@ function init(){
  let pump=makeActuator('pump','Irrigation transfer pump','Transfers water from the storage tank into the main irrigation header. Virtual output drives the animated water-flow indicator.',-8.5,.7,-3.4,'P-101');box(scene,-8.5,.22,-3.4,1.6,.35,1.1,steel);
  // Main pipe header and laterals
  beam(scene,[-8.5,1,-3.4],[8,1,-3.4],.11,pipeMat);beam(scene,[-8.5,1,-3.4],[-11,1,-3.4],.11,pipeMat);
- for(let x of [-5.5,0,5.5]){beam(scene,[x,1,-3.4],[x,1,.5],.055,pipeMat);for(let z=-2;z<5;z+=1.6){cylinder(scene,x,.97,z,.035,.035,.08,mat('#65cbe1'),8);}}
+ for(let x of [-7,-3.5,0,3.5,7]){beam(scene,[x,1,-3.4],[x,1,4.8],.055,pipeMat);for(let z=-2.8;z<4.8;z+=1.5){cylinder(scene,x,.97,z,.035,.035,.08,mat('#65cbe1'),8);}}
  for(let x of [-6.5,-3.5,1.5,4.5]){let valve=cylinder(scene,x,1.2,-3.4,.18,.18,.12,amberGlow,12);valve.rotation.x=Math.PI/2;}
  // Sensors, control cabinet and actuators
  makeSensor('temperature','Air temperature transmitter','PT-101 · Air temperature transmitter mounted at canopy height.',-7,3.3,3.7,'TT-101');
@@ -132,7 +132,7 @@ function init(){
  let cabinet=box(scene,10.5,1.65,4.1,1.6,3.2,.8,mat('#7c9291',.35,.5));box(scene,10.5,2.1,3.66,1.05,1.0,.08,mat('#102a30',.2,.2,{emissive:'#0b5a58',emissiveIntensity:.3}));for(let i=0;i<3;i++){let led=new THREE.Mesh(new THREE.SphereGeometry(.07,10,8),i===0?greenGlow:amberGlow);led.position.set(10.15+i*.3,1.35,3.62);scene.add(led);}
  let cabinetTag=labelSprite('CONTROL PANEL',' #e1f6ef');cabinetTag.position.set(10.5,3.7,4.1);scene.add(cabinetTag);
  // Flow particles
- for(let i=0;i<24;i++){let d=new THREE.Mesh(new THREE.SphereGeometry(.075,8,8),mat('#64ddf2',.25,.1,{emissive:'#147f9b',emissiveIntensity:1.2}));d.position.set(-8.2+(i%12)*1.25,1.1,-3.4+Math.floor(i/12)*.12);scene.add(d);waterDrops.push(d);}for(let bedX of [-5.5,0,5.5])for(let k=0;k<5;k++){let drop=new THREE.Mesh(new THREE.SphereGeometry(.045,7,7),mat('#79e8ff',.2,.1,{emissive:'#32b8e2',emissiveIntensity:1.5}));drop.position.set(bedX,1.02,-2.9+k*1.5);scene.add(drop);dripDrops.push({mesh:drop,phase:k/5+bedX*.03});}
+ for(let i=0;i<24;i++){let d=new THREE.Mesh(new THREE.SphereGeometry(.075,8,8),mat('#64ddf2',.25,.1,{emissive:'#147f9b',emissiveIntensity:1.2}));d.position.set(-8.2+(i%12)*1.25,1.1,-3.4+Math.floor(i/12)*.12);scene.add(d);waterDrops.push(d);}for(let bedX of [-7,-3.5,0,3.5,7])for(let k=0;k<5;k++){let drop=new THREE.Mesh(new THREE.SphereGeometry(.045,7,7),mat('#79e8ff',.2,.1,{emissive:'#32b8e2',emissiveIntensity:1.5}));drop.position.set(bedX,1.02,-2.9+k*1.5);scene.add(drop);dripDrops.push({mesh:drop,phase:k/5+bedX*.03});}
  // Grounded equipment nameplates
  let title=labelSprite('SMART GREENHOUSE · GH-01','#a6e8d4');title.position.set(0,8.9,0);title.scale.set(3.6,.65,1);scene.add(title);
  renderer.domElement.addEventListener('pointerdown',onPointer);$('twinResetView').addEventListener('click',()=>{camera.position.set(15,12,18);controls.target.set(0,1.45,0);controls.update();});$('twinPause').addEventListener('click',()=>{status.paused=!status.paused;$('twinPause').textContent=status.paused?'▶ RESUME MODEL':'Ⅱ PAUSE MODEL';});
