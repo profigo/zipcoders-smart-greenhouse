@@ -143,7 +143,7 @@ function setupRwandaMap(){
  window.addEventListener("resize",()=>{if(rwandaMap)rwandaMap.invalidateSize();});
  setTimeout(()=>rwandaMap&&rwandaMap.invalidateSize(),250);
 }
-let introScene=0,introTimer=null,introStartedAt=0,introTick=null;
+let introScene=0,introTimer=null,introSceneStartedAt=0,introTick=null;
 const introSlides=[
  {time:8000,chapter:"01 OPENING",kicker:"ZIPCODERS PRESENTS",title:"A new dawn<br><em>for agriculture.</em>",text:"Smarter growing begins when nature and technology work together."},
  {time:10000,chapter:"02 THE CHALLENGE",kicker:"THE CHALLENGE",title:"Farming faces<br><em>new pressure.</em>",text:"Changing weather, water stress and uncertain growing conditions make every farming decision matter."},
@@ -168,20 +168,18 @@ function advanceIntro(){
  if(introScene<introSlides.length-1){introScene++;renderIntro();scheduleIntroScene();}
  else stopIntro();
 }
-function scheduleIntroScene(){stopIntro();introTimer=setTimeout(advanceIntro,introSlides[introScene].time);}
+function scheduleIntroScene(){if(introTimer)clearTimeout(introTimer);introSceneStartedAt=Date.now();introTimer=setTimeout(advanceIntro,introSlides[introScene].time);}
 function enterGreenhouse(){stopIntro();$("projectIntro").classList.add("hidden");$("app").classList.remove("hidden");setupCommandCentre();pinAlert("Simulation workspace opened","Greenhouse command centre is ready. All process values are simulated.");setupRwandaMap();updateAll();startSimulation();}
 function showProjectIntro(){
  $("loginScreen").classList.add("hidden");$("projectIntro").classList.remove("hidden");
  introScene=0;renderIntro();stopIntro();scheduleIntroScene();
  introTick=setInterval(()=>{
-  const elapsed=Date.now()-introStartedAt;
-  if(introStartedAt===0)introStartedAt=Date.now();
-  const sceneElapsed=Date.now()-introStartedAt;
+  const sceneElapsed=Date.now()-introSceneStartedAt;
   const completed=introSlides.slice(0,introScene).reduce((n,x)=>n+x.time,0);
   const current=Math.min(introSlides[introScene].time,sceneElapsed);
   $("introProgress").style.width=((completed+current)/introTotal*100)+"%";
  },100);
- introStartedAt=Date.now();
+
 }
 $("loginForm").addEventListener("submit",e=>{e.preventDefault();if($("username").value.trim()===DEMO_USER&&$("password").value===DEMO_PASS){$("loginError").textContent="";showProjectIntro();}else $("loginError").textContent="Incorrect demo username or password.";});
 $("introContinue").addEventListener("click",enterGreenhouse);
