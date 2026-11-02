@@ -143,48 +143,9 @@ function setupRwandaMap(){
  window.addEventListener("resize",()=>{if(rwandaMap)rwandaMap.invalidateSize();});
  setTimeout(()=>rwandaMap&&rwandaMap.invalidateSize(),250);
 }
-let introScene=0,introTimer=null,introSceneStartedAt=0,introTick=null;
-const introSlides=[
- {time:8000,chapter:"01 OPENING",kicker:"ZIPCODERS PRESENTS",title:"A new dawn<br><em>for agriculture.</em>",text:"Smarter growing begins when nature and technology work together."},
- {time:10000,chapter:"02 THE CHALLENGE",kicker:"THE CHALLENGE",title:"Farming faces<br><em>new pressure.</em>",text:"Changing weather, water stress and uncertain growing conditions make every farming decision matter."},
- {time:14000,chapter:"03 OUR INNOVATION",kicker:"OUR INNOVATION",title:"Observe. Understand.<br><em>Respond.</em>",text:"A connected greenhouse concept brings environmental sensing, smart irrigation and automated control into one system."},
- {time:16000,chapter:"04 LIVE PROJECT SHOWCASE",kicker:"INSIDE ZIPCODERS GH-01",title:"Explore the<br><em>digital twin.</em>",text:"A closer look at our interactive greenhouse model, process equipment and command-centre controls. Values shown are simulated."},
- {time:12000,chapter:"05 THE IMPACT",kicker:"BUILT FOR RWANDA",title:"Grow resilient.<br><em>Use resources wisely.</em>",text:"Our vision: support climate-smart agriculture through accessible technology, better visibility and informed decisions."},
- {time:5000,chapter:"06 CLOSING",kicker:"ZIPCODERS · SMART GREENHOUSE",title:"The future is<br><em>growing.</em>",text:"ZIPCODERS Smart Greenhouse · NISR 2026 Big Data Hackathon"}
-];
-const introTotal=introSlides.reduce((sum,s)=>sum+s.time,0);
-function renderIntro(){
- const s=introSlides[introScene],root=$("projectIntro");
- root.dataset.scene=String(introScene);
- $("introKicker").textContent=s.kicker;
- $("introTitle").innerHTML=s.title;
- $("introText").textContent=s.text;
- $("introCounter").textContent=String(introScene+1).padStart(2,"0")+" / 06";
- $("introProgress").style.width=(introSlides.slice(0,introScene).reduce((n,x)=>n+x.time,0)/introTotal*100)+"%";
- document.querySelectorAll(".intro-chapters span").forEach((el,i)=>{el.classList.toggle("active",i===introScene);el.textContent=String(i+1).padStart(2,"0")+" "+introSlides[i].chapter.split(" ").slice(1).join(" ");});
-}
-function stopIntro(){if(introTimer){clearTimeout(introTimer);introTimer=null;}if(introTick){clearInterval(introTick);introTick=null;}}
-function advanceIntro(){
- if(introScene<introSlides.length-1){introScene++;renderIntro();scheduleIntroScene();}
- else stopIntro();
-}
-function scheduleIntroScene(){if(introTimer)clearTimeout(introTimer);introSceneStartedAt=Date.now();introTimer=setTimeout(advanceIntro,introSlides[introScene].time);}
-function enterGreenhouse(){stopIntro();$("projectIntro").classList.add("hidden");$("app").classList.remove("hidden");setupCommandCentre();pinAlert("Simulation workspace opened","Greenhouse command centre is ready. All process values are simulated.");setupRwandaMap();updateAll();startSimulation();}
-function showProjectIntro(){
- $("loginScreen").classList.add("hidden");$("projectIntro").classList.remove("hidden");
- introScene=0;renderIntro();stopIntro();scheduleIntroScene();
- introTick=setInterval(()=>{
-  const sceneElapsed=Date.now()-introSceneStartedAt;
-  const completed=introSlides.slice(0,introScene).reduce((n,x)=>n+x.time,0);
-  const current=Math.min(introSlides[introScene].time,sceneElapsed);
-  $("introProgress").style.width=((completed+current)/introTotal*100)+"%";
- },100);
-
-}
-$("loginForm").addEventListener("submit",e=>{e.preventDefault();if($("username").value.trim()===DEMO_USER&&$("password").value===DEMO_PASS){$("loginError").textContent="";showProjectIntro();}else $("loginError").textContent="Incorrect demo username or password.";});
-$("introContinue").addEventListener("click",enterGreenhouse);
-$("introSkip").addEventListener("click",enterGreenhouse);
-$("logout").addEventListener("click",()=>{stopIntro();$("app").classList.add("hidden");$("projectIntro").classList.add("hidden");$("loginScreen").classList.remove("hidden");$("password").value="";});
+function enterGreenhouse(){$("loginScreen").classList.add("hidden");$("app").classList.remove("hidden");setupCommandCentre();pinAlert("Simulation workspace opened","Greenhouse command centre is ready. All process values are simulated.");setupRwandaMap();updateAll();startSimulation();}
+$("loginForm").addEventListener("submit",e=>{e.preventDefault();if($("username").value.trim()===DEMO_USER&&$("password").value===DEMO_PASS){$("loginError").textContent="";enterGreenhouse();}else $("loginError").textContent="Incorrect demo username or password.";});
+$("logout").addEventListener("click",()=>{$("app").classList.add("hidden");$("loginScreen").classList.remove("hidden");$("password").value="";});
 function logActivity(title,detail){pinAlert(title,detail,/high|low|critical|failed|error/i.test(title+" "+detail)?"warning":"info");const feed=$("activityFeed"),item=document.createElement("div");item.className="activity-item";const dot=document.createElement("i"),wrap=document.createElement("div"),b=document.createElement("b"),s=document.createElement("small");b.textContent=title;s.textContent=detail;wrap.append(b,s);item.append(dot,wrap);feed.prepend(item);while(feed.children.length>5)feed.lastChild.remove();}
 function setDevice(id,on,reason="manual demo control"){const changed=device[id]!==on;device[id]=on;$(id).checked=on;const labels={pump:"pumpState",fan:"fanState",growlight:"lampState"};const names={pump:"Irrigation pump",fan:"Ventilation fan",growlight:"Grow lamp"};$(labels[id]).textContent=(on?"ON":"OFF")+" · "+reason;const visual={pump:"waterVisual",fan:"fanVisual",growlight:"lampVisual"}[id];$(visual).classList.toggle("on",on);if(changed)logActivity(names[id]+" "+(on?"turned ON":"turned OFF"),reason);}
 function applyAutomation(){if(!masterOn){["pump","fan","growlight"].forEach(id=>setDevice(id,false,"master system OFF"));return;}if(!$("auto").checked)return;setDevice("fan",data.temp>=30,data.temp>=30?"temperature ≥ 30°C":"temperature below 30°C");setDevice("pump",data.soil<35,data.soil<35?"soil moisture below 35%":"soil moisture adequate");setDevice("growlight",data.lux<4500,data.lux<4500?"low light detected":"natural light sufficient");}
