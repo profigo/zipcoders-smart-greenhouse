@@ -749,3 +749,28 @@ body{background:#07131c;color:#eef5f5}
 @media(max-width:900px){.sidebar{width:70px}.sidebar .brand>div:last-child,.sidebar .side-label,.sidebar .nav span,.sidebar .farm-mini div,.sidebar .logout{display:none}.sidebar .nav{font-size:0;text-align:center;padding:12px 4px}.main{padding:0 12px 25px}.reference-dashboard-grid{grid-template-columns:1fr}.reference-side{grid-template-columns:1fr 1fr;grid-template-rows:auto}.industrial-view{height:540px}}
 @media(max-width:620px){.metrics,.analytics-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.reference-side{grid-template-columns:1fr}.topbar{padding:12px}.topbar h1{font-size:17px}.industrial-heading{align-items:flex-start}.industrial-head-status{min-width:0}.industrial-view{height:470px}.scene-side-readout{width:185px;right:8px;top:55px}.scene-side-readout p{font-size:9px}.scene-bottom-strip{font-size:8px}.process-strip{grid-template-columns:repeat(2,1fr)}.map-layout{grid-template-columns:1fr}}
 @media(prefers-reduced-motion:reduce){.reference-health-track i{transition:none}}
+
+
+/* Critical desktop layout correction: keep the main workspace clear of the fixed sidebar. */
+@media(min-width:761px){
+  .main{margin-left:218px!important;width:calc(100% - 218px)!important;min-width:0;max-width:none;padding-left:clamp(16px,2vw,28px);padding-right:clamp(16px,2vw,28px)}
+  .main>.topbar{order:0}
+  .main>.welcome{order:1}
+  .main>.section-title{order:2}
+  .main>.metrics{order:3}
+  .main>#farmOverview{order:4;width:100%;min-width:0}
+  .main>#statisticsDashboard{order:5}
+  .main>#rwandaAgricultureMap{order:6}
+  .main>.content-grid{order:7}
+  .main>.controls-panel{order:8}
+  .main>.test-panel{order:9}
+  .main>.extra-grid{order:10}
+  .main>.adviser-panel{order:11}
+  .main>.field-ops{order:12}
+  .main>.nisr-evidence{order:13}
+}
+.main>.reference-dashboard-grid{min-width:0}
+.reference-dashboard-grid>.reference-main,.reference-dashboard-grid>.reference-side{min-width:0}
+.reference-main>.industrial-scene-panel{width:100%;min-width:0}
+.industrial-view,.three-canvas{width:100%;min-width:0}
+@media(max-width:760px){.main{width:100%;margin-left:0!important}}
