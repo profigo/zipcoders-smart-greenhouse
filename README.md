@@ -41,3 +41,15 @@ Build and calibrate the sensor unit; add a database such as Supabase; connect th
 
 ## Verification note
 These changes were committed to the default branch. Source-level checks confirmed that the intro markup and JavaScript flow are absent, ten crop options are present, and the new statistics elements and update function exist. A live browser test, performance measurement and Vercel deployment check have not been performed in this session.
+
+## Dashboard reference redesign
+The dashboard now follows the supplied dark agricultural command-centre reference more closely:
+- Six compact KPI cards across the top (temperature, humidity, soil moisture, light, rule-based crop-environment score and active virtual outputs).
+- The interactive 3D greenhouse is promoted directly below the KPI row, with a larger viewport and closer default camera framing.
+- Crop-environment health and three rule-based recommended actions sit beside the greenhouse view on wide screens.
+- The dashboard retains the ten selectable crop profiles, detailed sensor controls, historical demo charts, activity feed, statistics and field operations tools.
+- Responsive layouts collapse the side panels and KPI grid for smaller screens.
+
+The design intentionally does not invent EC, pH, CO2, AI confidence or live crop-disease diagnosis values because the current prototype does not measure those parameters. The health score and recommendations are transparent rule-based demo indicators. The greenhouse and all sensor readings remain simulated until real sensors and persistent telemetry are connected.
+
+Source-level verification after this redesign confirmed six KPI cards, ten crop options, the greenhouse section appearing before the statistical details, linked dashboard indicator IDs, and balanced HTML tag nesting. This is not a substitute for testing the rendered page in a browser; no live visual/browser or deployment test has been completed here.
