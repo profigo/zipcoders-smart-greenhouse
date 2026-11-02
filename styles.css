@@ -774,3 +774,6 @@ body{background:#07131c;color:#eef5f5}
 .reference-main>.industrial-scene-panel{width:100%;min-width:0}
 .industrial-view,.three-canvas{width:100%;min-width:0}
 @media(max-width:760px){.main{width:100%;margin-left:0!important}}
+
+/* Crop growth indicator inside the existing 3D instrument panel */
+.crop-growth-panel{padding:11px 0 2px;border-bottom:1px solid #2c434a}.crop-growth-heading{display:flex;justify-content:space-between;align-items:center;font-size:9px;letter-spacing:.8px;color:#91a9aa}.crop-growth-heading strong{color:#facc15;font-size:11px}.crop-growth-track{height:7px;background:#243c42;border-radius:8px;overflow:hidden;margin:8px 0 6px}.crop-growth-track span{display:block;width:0;height:100%;background:linear-gradient(90deg,#258b58,#5be0a2,#facc15);border-radius:8px;transition:width .25s ease}.crop-growth-panel>small{font-size:9px;letter-spacing:1px;color:#60dcb0;font-weight:700}
