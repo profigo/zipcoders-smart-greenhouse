@@ -872,3 +872,6 @@ body{background:#07131c;color:#eef5f5}
 .project-disclaimer{margin:14px 0 0;padding:11px 13px;border-left:3px solid #e5b83d;background:#18252a;color:#a8bbc2;font-size:10px;line-height:1.65}
 @media(max-width:900px){.project-flow,.roadmap-steps{grid-template-columns:repeat(2,minmax(0,1fr))}.project-capability-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:650px){.project-intro-grid,.project-details-grid,.project-team-vision{grid-template-columns:1fr}.project-flow,.roadmap-steps,.project-capability-grid{grid-template-columns:1fr}.project-brief{padding:14px!important}.project-statement h4{font-size:15px}}
+
+/* BETA Technologies supplied-brand treatment */
+.beta-logo-image{display:block;width:76px;height:48px;object-fit:contain;background:#000;border:1px solid rgba(255,255,255,.12);border-radius:5px;flex:0 0 auto}.brand{gap:10px!important}.brand.light .beta-logo-image{width:72px;height:42px}.mobile-brand .beta-logo-image{width:92px;height:52px}.login-art>.brand .beta-logo-image{width:112px;height:64px}.brand>div b{letter-spacing:.08em}
