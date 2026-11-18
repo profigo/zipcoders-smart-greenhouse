@@ -875,3 +875,18 @@ body{background:#07131c;color:#eef5f5}
 
 /* BETA Technologies supplied-brand treatment */
 .beta-logo-image{display:block;width:76px;height:48px;object-fit:contain;background:#000;border:1px solid rgba(255,255,255,.12);border-radius:5px;flex:0 0 auto}.brand{gap:10px!important}.brand.light .beta-logo-image{width:72px;height:42px}.mobile-brand .beta-logo-image{width:92px;height:52px}.login-art>.brand .beta-logo-image{width:112px;height:64px}.brand>div b{letter-spacing:.08em}
+
+/* Focused workspace navigation: one task area at a time. */
+.workspace-view-hidden{display:none!important}
+.sidebar nav{display:grid;gap:3px;align-content:start}
+.sidebar .nav{min-height:42px;display:flex;align-items:center;gap:11px;font-size:12px}
+.main{min-height:100vh}
+.main>.topbar{position:sticky;top:0;z-index:30}
+.main>.welcome{margin-bottom:12px}
+.main>.metrics{margin-bottom:12px}
+#digitalTwin .industrial-view{height:min(68vh,610px);min-height:430px}
+#digitalTwin{margin-top:0}
+#statisticsDashboard,#rwandaAgricultureMap,.controls-panel,.test-panel,.extra-grid,.adviser-panel,.field-ops,.project-brief{margin-top:0!important}
+@media(min-width:761px){.main{height:100vh;overflow-y:auto;overscroll-behavior:contain}.sidebar{position:fixed;left:0;top:0;height:100vh;overflow-y:auto}.main>.topbar{backdrop-filter:blur(12px)}}
+@media(max-width:760px){.sidebar nav{display:flex;overflow-x:auto;gap:5px}.sidebar .nav{flex:0 0 auto;min-height:38px}.main{height:auto;overflow:visible}.main>.topbar{position:relative}}
+@media(prefers-reduced-motion:no-preference){.main>.welcome,.main>.panel,.main>.metrics,.main>.reference-dashboard-grid{animation:workspaceEnter .22s ease-out both}@keyframes workspaceEnter{from{opacity:.75;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}}
