@@ -202,11 +202,12 @@ function randomTick(){
  if(!simulation)return;
  simulationStep++;
  const wave=(step,period,phase=0)=>Math.sin((step/period)*Math.PI*2+phase);
- // Smooth, visibly changing demo signals with occasional threshold crossings.
- if(!manualSensorOverrides.has("temp"))data.temp=Math.max(18,Math.min(39,27.5+3.8*wave(simulationStep,34,.15)+(Math.random()-.5)*.7));
- if(!manualSensorOverrides.has("humidity"))data.humidity=Math.max(30,Math.min(98,66+27*wave(simulationStep,43,1.1)+(Math.random()-.5)*2.5));
- if(!manualSensorOverrides.has("soil"))data.soil=Math.max(12,Math.min(90,53+20*wave(simulationStep,57,2.0)+(device.pump?.65:-.2)+(Math.random()-.5)*1.2));
- if(!manualSensorOverrides.has("lux"))data.lux=Math.max(500,Math.min(16000,8200+6100*wave(simulationStep,48,.6)+(Math.random()-.5)*500));
+ // Smooth, deterministic demo signals: readings evolve gradually without random jitter.
+ // Longer cycles keep the live dashboard visibly moving while values remain readable.
+ if(!manualSensorOverrides.has("temp"))data.temp=Math.max(18,Math.min(39,27.5+3.8*wave(simulationStep,84,.15)));
+ if(!manualSensorOverrides.has("humidity"))data.humidity=Math.max(30,Math.min(98,66+27*wave(simulationStep,102,1.1)));
+ if(!manualSensorOverrides.has("soil"))data.soil=Math.max(12,Math.min(90,53+20*wave(simulationStep,132,2.0)+(device.pump?.65:-.2)));
+ if(!manualSensorOverrides.has("lux"))data.lux=Math.max(500,Math.min(16000,8200+6100*wave(simulationStep,116,.6)));
  tickCount++;updateAll();$("snapshot").textContent="● SIMULATION ACTIVE · SAMPLE "+tickCount;
  const stamp=$("lastUpdate");if(stamp)stamp.textContent="Updated "+new Date().toLocaleTimeString();
 }
