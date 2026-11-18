@@ -220,5 +220,31 @@ $("simulationToggle").addEventListener("click",()=>{simulation=!simulation;$("si
 $("resetTest").addEventListener("click",()=>{manualSensorOverrides.clear();simulationStep=0;Object.assign(data,{temp:27,humidity:67,soil:54,lux:8200});historyTemp=[];historyHumidity=[];historySoil=[];historyLux=[];tickCount=0;$("simulationState").textContent="Changing demo data ON · all sensors released";if(!$("auto").checked){$("auto").checked=true;$("autoState").textContent="Automatic mode · threshold rules active";}if(!masterOn){masterOn=true;$("masterToggle").textContent="⏻ Turn system OFF";$("masterToggle").classList.remove("off");$("masterText").textContent="System enabled · virtual equipment can operate";$("auto").disabled=false;}updateAll();logActivity("Sensor test reset","Sample values restored");});
 $("refreshAdvice").addEventListener("click",()=>{updateAdvice();logActivity("Farm adviser refreshed","Recommendations recalculated from current simulation");});
 $("cropSelect").addEventListener("change",()=>{const crops={tomato:["🍅","Tomato · fruiting stage","Warm conditions, steady moisture and good airflow support healthy fruit development.","2.0–3.0 L/plant/day*","21–29°C*"],lettuce:["🥬","Lettuce · leafy growth","Cooler conditions and consistent moisture support leafy growth.","0.5–1.0 L/plant/day*","15–22°C*"],pepper:["🫑","Sweet pepper · flowering","Needs warmth, even watering and airflow for flowering and fruit set.","1.5–2.5 L/plant/day*","20–28°C*"],cucumber:["🥒","Cucumber · fruit development","Warm-season vine crop; benefits from even moisture, support and airflow.","1.5–2.5 L/plant/day*","22–28°C*"],spinach:["🥬","Spinach · leafy growth","Cool-season leafy crop; avoid excessive heat and keep moisture steady.","0.5–1.0 L/plant/day*","15–20°C*"],kale:["🥬","Kale · leaf production","Hardy leafy crop preferring moderate temperatures and regular watering.","0.7–1.2 L/plant/day*","15–24°C*"],cabbage:["🥬","Cabbage · head formation","Requires steady moisture and suitable spacing as the head develops.","1.0–2.0 L/plant/day*","15–20°C*"],eggplant:["🍆","Eggplant · fruiting stage","Warm-season crop needing warmth, consistent irrigation and drainage.","1.5–2.5 L/plant/day*","22–30°C*"],strawberry:["🍓","Strawberry · flowering and fruit","Benefits from careful irrigation, good drainage and moderate temperatures.","0.5–1.0 L/plant/day*","18–24°C*"],greenbean:["🫘","Green bean · pod development","Needs regular moisture during flowering and pod filling; avoid waterlogging.","1.0–1.8 L/plant/day*","18–27°C*"],carrot:["🥕","Carrot · root development","Loose soil and even moisture help roots develop uniformly.","0.5–1.0 L/plant/day*","16–22°C*"]};const c=crops[$("cropSelect").value];$("cropEmoji").textContent=c[0];$("cropName").textContent=c[1];$("cropDesc").textContent=c[2];$("cropWater").textContent=c[3];$("cropTemp").textContent=c[4];$("referenceCropName").textContent=c[1].split(" · ")[0];});
-document.querySelectorAll(".nav").forEach(a=>a.addEventListener("click",()=>{document.querySelectorAll(".nav").forEach(n=>n.classList.remove("active"));a.classList.add("active");}));
+const workspaceViews={
+ overview:{title:"Greenhouse command centre",crumb:"OVERVIEW",targets:["#overview",".metrics"]},
+ greenhouse:{title:"3D greenhouse digital twin",crumb:"DIGITAL TWIN",targets:["#farmOverview"]},
+ monitoring:{title:"Live sensor monitoring",crumb:"LIVE SENSORS",targets:["#monitoring",".metrics"]},
+ statistics:{title:"Performance analytics",crumb:"ANALYTICS",targets:[".content-grid","#statisticsDashboard","#rwandaAgricultureMap"]},
+ controls:{title:"Automation & equipment control",crumb:"CONTROL ROOM",targets:["#controls",".test-panel"]},
+ crops:{title:"Crop and water management",crumb:"CROP MANAGEMENT",targets:[".extra-grid"]},
+ adviser:{title:"Greenhouse farm adviser",crumb:"FARM ADVISER",targets:["#advisor"]},
+ operations:{title:"Field operations & data",crumb:"OPERATIONS",targets:["#fieldOperations",".nisr-evidence"]},
+ project:{title:"About the BETA Smart Greenhouse",crumb:"PROJECT OVERVIEW",targets:["#projectBrief"]}
+};
+const workspaceTargets=["#overview","#projectBrief","#monitoring",".metrics","#farmOverview",".content-grid","#statisticsDashboard","#rwandaAgricultureMap","#controls",".test-panel",".extra-grid","#advisor","#fieldOperations",".nisr-evidence"];
+function showWorkspaceView(view,updateHash=true){
+ const config=workspaceViews[view]||workspaceViews.overview;
+ workspaceTargets.forEach(selector=>document.querySelectorAll(selector).forEach(node=>node.classList.add("workspace-view-hidden")));
+ config.targets.forEach(selector=>document.querySelectorAll(selector).forEach(node=>node.classList.remove("workspace-view-hidden")));
+ document.querySelectorAll(".nav[data-workspace-view]").forEach(link=>link.classList.toggle("active",link.dataset.workspaceView===view));
+ const crumb=document.querySelector(".topbar .crumb b"),title=document.querySelector(".topbar h1");
+ if(crumb)crumb.textContent=config.crumb;
+ if(title)title.textContent=config.title;
+ document.querySelector(".main")?.scrollTo({top:0,behavior:"smooth"});
+ if(updateHash){const link=document.querySelector('.nav[data-workspace-view="'+view+'"]');if(link)history.replaceState(null,"",link.getAttribute("href"));}
+ if(view==="greenhouse"||view==="statistics")requestAnimationFrame(()=>window.dispatchEvent(new Event("resize")));
+}
+document.querySelectorAll(".nav[data-workspace-view]").forEach(link=>link.addEventListener("click",event=>{event.preventDefault();showWorkspaceView(link.dataset.workspaceView);}));
+const initialLink=[...document.querySelectorAll(".nav[data-workspace-view]")].find(link=>link.getAttribute("href")===location.hash);
+showWorkspaceView(initialLink?.dataset.workspaceView||"overview",false);
 updateAll();
