@@ -248,8 +248,3 @@ document.querySelectorAll(".nav[data-workspace-view]").forEach(link=>link.addEve
 const initialLink=[...document.querySelectorAll(".nav[data-workspace-view]")].find(link=>link.getAttribute("href")===location.hash);
 showWorkspaceView(initialLink?.dataset.workspaceView||"overview",false);
 updateAll();
-// Public company website and platform entry interactions.
-document.querySelectorAll("[data-open-login]").forEach(button=>button.addEventListener("click",()=>{$("publicHome").classList.add("hidden");$("loginScreen").classList.remove("hidden");$("app").classList.add("hidden");window.scrollTo(0,0);}));
-document.querySelectorAll("[data-back-home]").forEach(button=>button.addEventListener("click",()=>{$("loginScreen").classList.add("hidden");$("publicHome").classList.remove("hidden");window.scrollTo(0,0);}));
-const publicMenu=document.querySelector(".public-menu");if(publicMenu)publicMenu.addEventListener("click",()=>{const nav=document.querySelector(".public-nav"),open=nav.classList.toggle("is-open");publicMenu.setAttribute("aria-expanded",String(open));});
-document.querySelectorAll(".public-nav a").forEach(link=>link.addEventListener("click",()=>{document.querySelector(".public-nav")?.classList.remove("is-open");publicMenu?.setAttribute("aria-expanded","false");}));
