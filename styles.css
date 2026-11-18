@@ -836,3 +836,39 @@ body{background:#07131c;color:#eef5f5}
 
 /* Statistics data-source selector */
 .stats-toolbar label{flex:1 1 170px}.stats-toolbar select{width:100%}.stats-source{white-space:nowrap}
+
+
+/* BETA TECHNOLOGIES project overview — added without changing the greenhouse workspace layout. */
+.project-brief{margin:0 0 14px!important;padding:20px!important;background:#0d1b25!important;border-color:#203744!important}
+.project-brief .panel-heading h3{color:#f4f8fb;font-size:21px}
+.project-brief .panel-heading p{max-width:760px;color:#9db6c4;line-height:1.65}
+.project-intro-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:12px;margin-top:16px}
+.project-statement{padding:18px;border:1px solid #294452;border-radius:12px;background:linear-gradient(140deg,#102a35,#0b202a)}
+.project-statement h4{font-size:17px;line-height:1.4;color:#f4f8fb;margin:10px 0}
+.project-statement p,.project-capability-grid p,.project-flow p,.project-detail li,.roadmap-steps span,.project-team-vision p{font-size:11px;line-height:1.7;color:#9fb5c1;margin:0}
+.project-outcome{background:linear-gradient(140deg,#102c28,#0b202a);border-color:#285648}
+.project-label{font-size:9px;font-weight:900;letter-spacing:1.5px;color:#54d7a0}
+.project-subheading{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:20px 0 10px}
+.project-subheading b{font-size:10px;letter-spacing:1.2px;color:#67d8ff}
+.project-subheading span{font-size:10px;color:#829eac}
+.project-flow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.project-flow article,.project-capability-grid article,.project-detail,.roadmap-steps article{min-width:0;padding:14px;border:1px solid #243f4d;border-radius:10px;background:#0a1822}
+.project-flow article>span{display:grid;place-items:center;width:27px;height:27px;border-radius:8px;background:#153d45;color:#5ce0b1;font-size:10px;font-weight:900;margin-bottom:12px}
+.project-flow b,.project-capability-grid b,.roadmap-steps b{display:block;font-size:12px;color:#f2f7f8;margin-bottom:6px}
+.project-capability-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:12px}
+.project-capability-grid article>span{display:block;color:#60d6ff;font-size:17px;margin-bottom:8px}
+.project-details-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:12px}
+.project-detail .project-subheading{margin:0 0 10px}
+.project-detail ul{padding-left:16px;margin:0}
+.project-detail li{padding:3px 0}
+.project-roadmap{margin-top:5px}
+.roadmap-steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.roadmap-steps b{color:#ffd45b}
+.project-team-vision{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+.project-team-vision>article{padding:16px;border:1px solid #294452;border-radius:10px;background:#0a1822}
+.project-team-vision p{margin-top:8px}
+.project-team-vision p b{color:#eaf5f7}
+.project-team-vision h4{font-size:16px;line-height:1.5;color:#f3f8fa;margin:10px 0}
+.project-disclaimer{margin:14px 0 0;padding:11px 13px;border-left:3px solid #e5b83d;background:#18252a;color:#a8bbc2;font-size:10px;line-height:1.65}
+@media(max-width:900px){.project-flow,.roadmap-steps{grid-template-columns:repeat(2,minmax(0,1fr))}.project-capability-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:650px){.project-intro-grid,.project-details-grid,.project-team-vision{grid-template-columns:1fr}.project-flow,.roadmap-steps,.project-capability-grid{grid-template-columns:1fr}.project-brief{padding:14px!important}.project-statement h4{font-size:15px}}
